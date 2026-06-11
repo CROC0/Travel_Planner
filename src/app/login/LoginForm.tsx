@@ -1,14 +1,13 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { Plane, Lock } from 'lucide-react';
 
 export function LoginForm() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
   const params = useSearchParams();
 
   async function handleSubmit(e: React.FormEvent) {
@@ -24,8 +23,7 @@ export function LoginForm() {
       });
 
       if (res.ok) {
-        router.push(params.get('from') ?? '/');
-        router.refresh();
+        window.location.href = params.get('from') ?? '/';
       } else {
         const data = await res.json();
         setError(data.message ?? 'Incorrect password');
