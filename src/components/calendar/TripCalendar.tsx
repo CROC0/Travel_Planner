@@ -54,22 +54,46 @@ function MonthGrid({ year, month, monthName, itinerary, today }: {
   );
 }
 
+const MONTH_NAMES = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
 interface TripCalendarProps {
   itinerary: Itinerary;
+  startDate: string;
+  endDate: string;
 }
 
-export function TripCalendar({ itinerary }: TripCalendarProps) {
+export function TripCalendar({ itinerary, startDate, endDate }: TripCalendarProps) {
   const today = toDateStr(
     new Date().getFullYear(),
     new Date().getMonth() + 1,
     new Date().getDate()
   );
 
+  const start = new Date(startDate + 'T00:00:00Z');
+  const end   = new Date(endDate   + 'T00:00:00Z');
+
+  // Build list of distinct year+month combos between start and end
+  const months: { year: number; month: number }[] = [];
+  const cur = new Date(Date.UTC(start.getUTCFullYear(), start.getUTCMonth(), 1));
+  const last = new Date(Date.UTC(end.getUTCFullYear(), end.getUTCMonth(), 1));
+  while (cur <= last) {
+    months.push({ year: cur.getUTCFullYear(), month: cur.getUTCMonth() + 1 });
+    cur.setUTCMonth(cur.getUTCMonth() + 1);
+  }
+
   return (
     <div>
       <div className="flex flex-col md:flex-row gap-4">
-        <MonthGrid year={2026} month={9} monthName="September" itinerary={itinerary} today={today} />
-        <MonthGrid year={2026} month={10} monthName="October" itinerary={itinerary} today={today} />
+        {months.map(({ year, month }) => (
+          <MonthGrid
+            key={`${year}-${month}`}
+            year={year}
+            month={month}
+            monthName={MONTH_NAMES[month - 1]}
+            itinerary={itinerary}
+            today={today}
+          />
+        ))}
       </div>
       <CalendarLegend />
     </div>

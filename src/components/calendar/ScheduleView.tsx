@@ -4,7 +4,6 @@ import { useRef, useState } from 'react';
 import Link from 'next/link';
 import { ChevronLeft, ChevronRight, Clock, MapPin, ExternalLink, X, Plus } from 'lucide-react';
 import type { Activity, ActivityCategory, AddActivityFormValues, Itinerary } from '@/types';
-import { TRIP_DAY_DATES } from '@/data/trip-config';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { AddActivityModal } from '@/components/itinerary/AddActivityModal';
 
@@ -222,15 +221,15 @@ function Unscheduled({ activities }: { activities: Activity[] }) {
 
 // ─── Shared day-builder ────────────────────────────────────────────────────────
 function buildDays(itinerary: Itinerary) {
-  return TRIP_DAY_DATES.map((date, i) => {
-    const d = new Date(date + 'T12:00:00');
+  return itinerary.map((plan, i) => {
+    const d = new Date(plan.date + 'T12:00:00');
     return {
-      date,
+      date:   plan.date,
       dayNum: i + 1,
       name:   DAY_NAMES[d.getDay()],
       num:    d.getDate(),
       mon:    MON_NAMES[d.getMonth()],
-      plan:   itinerary[i],
+      plan,
     };
   });
 }

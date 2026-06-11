@@ -76,7 +76,7 @@ export default function CalendarPage() {
           <ScheduleView itinerary={itinerary} onAdd={addActivity} />
         ) : (
           <div className="max-w-3xl mx-auto">
-            <TripCalendar itinerary={itinerary} />
+            <TripCalendar itinerary={itinerary} startDate={holiday.startDate} endDate={holiday.endDate} />
           </div>
         )}
       </div>

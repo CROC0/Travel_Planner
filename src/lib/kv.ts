@@ -1,5 +1,5 @@
 import { Redis } from '@upstash/redis';
-import type { Itinerary, DayPlan, TodoItem, Holiday } from '@/types';
+import type { Itinerary, DayPlan, TodoItem, Holiday, HolidayDocument } from '@/types';
 
 const redis = new Redis({
   url: process.env.UPSTASH_REDIS_REST_URL!,
@@ -86,5 +86,25 @@ export async function deleteTodo(holidayId: string, id: string): Promise<TodoIte
   const todos = await getTodos(holidayId);
   const next = todos.filter((t) => t.id !== id);
   await redis.set(`todos:${holidayId}`, next);
+  return next;
+}
+
+// ─── Documents ───────────────────────────────────────────────────────────────
+
+export async function getDocuments(holidayId: string): Promise<HolidayDocument[]> {
+  return (await redis.get<HolidayDocument[]>(`documents:${holidayId}`)) ?? [];
+}
+
+export async function addDocument(holidayId: string, doc: HolidayDocument): Promise<HolidayDocument[]> {
+  const docs = await getDocuments(holidayId);
+  const next = [doc, ...docs];
+  await redis.set(`documents:${holidayId}`, next);
+  return next;
+}
+
+export async function deleteDocument(holidayId: string, id: string): Promise<HolidayDocument[]> {
+  const docs = await getDocuments(holidayId);
+  const next = docs.filter((d) => d.id !== id);
+  await redis.set(`documents:${holidayId}`, next);
   return next;
 }

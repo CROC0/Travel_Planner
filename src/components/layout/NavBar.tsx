@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Plane, Calendar, Map, Compass, Home, ClipboardList } from 'lucide-react';
+import { Plane, Calendar, Map, Compass, Home, ClipboardList, FolderOpen } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 function getHolidayId(pathname: string): string | null {
@@ -20,6 +20,7 @@ export function NavBar() {
     { href: `/holidays/${holidayId}/calendar`, label: 'Calendar', icon: Calendar },
     { href: `/holidays/${holidayId}/explore`, label: 'Explore', icon: Compass },
     { href: `/holidays/${holidayId}/prep`, label: 'Prep', icon: ClipboardList },
+    { href: `/holidays/${holidayId}/documents`, label: 'Documents', icon: FolderOpen },
   ] : [];
 
   return (

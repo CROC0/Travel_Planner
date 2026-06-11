@@ -1,11 +1,12 @@
 'use client';
 
+import Link from 'next/link';
 import { useHoliday } from '@/context/HolidayContext';
 import { CountdownTimer } from '@/components/home/CountdownTimer';
 import { CrewSection } from '@/components/home/CrewSection';
 import { SectionHeading } from '@/components/shared/SectionHeading';
 import { QuickNavGrid } from '@/components/home/QuickNavGrid';
-import { Calendar, MapPin, Plane, Sun } from 'lucide-react';
+import { Calendar, MapPin, Pencil, Plane, Sun } from 'lucide-react';
 
 function formatDateRange(start: string, end: string): string {
   const fmt = (d: string) =>
@@ -80,7 +81,15 @@ export default function HolidayHomePage() {
         )}
 
         <section>
-          <SectionHeading title="Trip at a glance" subtitle="Everything you need to know" accent="teal" symbol="◉" />
+          <div className="flex items-end justify-between mb-0">
+            <SectionHeading title="Trip at a glance" subtitle="Everything you need to know" accent="teal" symbol="◉" />
+            <Link
+              href={`/holidays/${holiday.id}/edit`}
+              className="inline-flex items-center gap-1.5 text-xs text-[#8888aa] hover:text-[#00e5cc] transition-colors pb-4"
+            >
+              <Pencil className="w-3.5 h-3.5" /> Edit holiday
+            </Link>
+          </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
             {summaryStats.map(({ icon: Icon, label, sub }) => (
               <div key={label} className="glass rounded-2xl p-3 sm:p-4 flex flex-col gap-2 hover:border-[#00e5cc]/30 transition-colors" style={{ border: '1px solid rgba(255,255,255,0.06)' }}>

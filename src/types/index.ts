@@ -141,3 +141,12 @@ export interface Holiday {
   crew?: CrewMember[];
   createdAt: number;
 }
+
+export interface HolidayDocument {
+  id: string;
+  name: string;
+  url: string;
+  contentType: string;
+  size: number;
+  uploadedAt: number;
+}
