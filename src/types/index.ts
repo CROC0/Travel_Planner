@@ -112,3 +112,41 @@ export interface TodoItem {
   category: TodoCategory;
   createdAt: number;
 }
+
+export interface User {
+  id: string;
+  email: string;
+  name: string;
+  passwordHash: string;
+  createdAt: number;
+}
+
+export interface CrewMember {
+  id: string;
+  name: string;
+  role: string;
+  emoji?: string;
+  color?: string;
+  tagline?: string;
+}
+
+export interface Holiday {
+  id: string;
+  userId: string;
+  name: string;
+  destination: string;
+  startDate: string; // ISO "2026-09-25"
+  endDate: string;   // ISO "2026-10-04"
+  coverEmoji?: string;
+  crew?: CrewMember[];
+  createdAt: number;
+}
+
+export interface HolidayDocument {
+  id: string;
+  name: string;
+  url: string;
+  contentType: string;
+  size: number;
+  uploadedAt: number;
+}

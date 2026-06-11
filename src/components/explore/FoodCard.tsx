@@ -28,10 +28,11 @@ const priceColors: Record<FoodSpot['priceRange'], string> = {
 
 interface FoodCardProps {
   spot: FoodSpot;
+  dayCount?: number;
   onAddToDay?: (day: number, spot: FoodSpot) => void;
 }
 
-export function FoodCard({ spot, onAddToDay }: FoodCardProps) {
+export function FoodCard({ spot, dayCount = 10, onAddToDay }: FoodCardProps) {
   const [dayPickerOpen, setDayPickerOpen] = useState(false);
 
   return (
@@ -104,7 +105,7 @@ export function FoodCard({ spot, onAddToDay }: FoodCardProps) {
             <DialogTitle className="text-white text-sm">Add to which day?</DialogTitle>
           </DialogHeader>
           <div className="grid grid-cols-5 gap-2 mt-2">
-            {Array.from({ length: 10 }, (_, i) => i + 1).map((day) => (
+            {Array.from({ length: dayCount }, (_, i) => i + 1).map((day) => (
               <GlowButton
                 key={day}
                 variant="ghost"

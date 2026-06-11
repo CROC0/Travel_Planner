@@ -1,76 +1,110 @@
 import { Redis } from '@upstash/redis';
-import type { Itinerary, DayPlan, TodoItem } from '@/types';
-import { ITINERARY_KV_KEY, TODO_KV_KEY } from '@/lib/constants';
-import { TRIP_DAYS, TRIP_DAY_DATES, TRIP_DAY_LABELS } from '@/data/trip-config';
+import type { Itinerary, DayPlan, TodoItem, Holiday, HolidayDocument } from '@/types';
 
 const redis = new Redis({
   url: process.env.UPSTASH_REDIS_REST_URL!,
   token: process.env.UPSTASH_REDIS_REST_TOKEN!,
 });
 
-function emptyItinerary(): Itinerary {
-  return Array.from({ length: TRIP_DAYS }, (_, i) => ({
+export { redis };
+
+function addDays(dateStr: string, n: number): string {
+  const d = new Date(dateStr + 'T00:00:00Z');
+  d.setUTCDate(d.getUTCDate() + n);
+  return d.toISOString().split('T')[0];
+}
+
+function tripLength(holiday: Holiday): number {
+  const start = new Date(holiday.startDate + 'T00:00:00Z');
+  const end = new Date(holiday.endDate + 'T00:00:00Z');
+  return Math.max(1, Math.round((end.getTime() - start.getTime()) / 86_400_000) + 1);
+}
+
+export function emptyItinerary(holiday: Holiday): Itinerary {
+  const days = tripLength(holiday);
+  return Array.from({ length: days }, (_, i) => ({
     day: i + 1,
-    date: TRIP_DAY_DATES[i],
-    label: TRIP_DAY_LABELS[i],
+    date: addDays(holiday.startDate, i),
+    label: `Day ${i + 1}`,
     activities: [],
     notes: '',
   }));
 }
 
-export async function getItinerary(): Promise<Itinerary> {
-  const data = await redis.get<Itinerary>(ITINERARY_KV_KEY);
-  if (!data) return emptyItinerary();
-  // Merge to ensure all 10 days exist (handles partial data)
-  const empty = emptyItinerary();
+export async function getItinerary(holidayId: string, holiday: Holiday): Promise<Itinerary> {
+  const data = await redis.get<Itinerary>(`itinerary:${holidayId}`);
+  const empty = emptyItinerary(holiday);
+  if (!data) return empty;
   return empty.map((emptyDay) => {
     const stored = data.find((d) => d.day === emptyDay.day);
     if (!stored) return emptyDay;
-    // Always use label/date from config, not stale stored values
     return { ...stored, label: emptyDay.label, date: emptyDay.date };
   });
 }
 
-export async function setDay(dayPlan: DayPlan): Promise<void> {
-  const itinerary = await getItinerary();
+export async function setDay(holidayId: string, holiday: Holiday, dayPlan: DayPlan): Promise<void> {
+  const itinerary = await getItinerary(holidayId, holiday);
   const idx = itinerary.findIndex((d) => d.day === dayPlan.day);
   if (idx === -1) return;
   itinerary[idx] = dayPlan;
-  await redis.set(ITINERARY_KV_KEY, itinerary);
+  await redis.set(`itinerary:${holidayId}`, itinerary);
 }
 
-export async function resetDay(day: number): Promise<DayPlan> {
-  const empty = emptyItinerary();
+export async function resetDay(holidayId: string, holiday: Holiday, day: number): Promise<DayPlan> {
+  const empty = emptyItinerary(holiday);
   const emptyDay = empty.find((d) => d.day === day);
   if (!emptyDay) throw new Error(`Invalid day: ${day}`);
-  await setDay(emptyDay);
+  await setDay(holidayId, holiday, emptyDay);
   return emptyDay;
 }
 
 // ─── Todos ────────────────────────────────────────────────────────────────────
 
-export async function getTodos(): Promise<TodoItem[]> {
-  const data = await redis.get<TodoItem[]>(TODO_KV_KEY);
-  return data ?? [];
+export async function getTodos(holidayId: string): Promise<TodoItem[]> {
+  return (await redis.get<TodoItem[]>(`todos:${holidayId}`)) ?? [];
 }
 
-export async function addTodo(item: TodoItem): Promise<TodoItem[]> {
-  const todos = await getTodos();
+export async function addTodo(holidayId: string, item: TodoItem): Promise<TodoItem[]> {
+  const todos = await getTodos(holidayId);
   const next = [item, ...todos];
-  await redis.set(TODO_KV_KEY, next);
+  await redis.set(`todos:${holidayId}`, next);
   return next;
 }
 
-export async function updateTodo(id: string, patch: Partial<Pick<TodoItem, 'text' | 'completed' | 'category'>>): Promise<TodoItem[]> {
-  const todos = await getTodos();
+export async function updateTodo(
+  holidayId: string,
+  id: string,
+  patch: Partial<Pick<TodoItem, 'text' | 'completed' | 'category'>>,
+): Promise<TodoItem[]> {
+  const todos = await getTodos(holidayId);
   const next = todos.map((t) => (t.id === id ? { ...t, ...patch } : t));
-  await redis.set(TODO_KV_KEY, next);
+  await redis.set(`todos:${holidayId}`, next);
   return next;
 }
 
-export async function deleteTodo(id: string): Promise<TodoItem[]> {
-  const todos = await getTodos();
+export async function deleteTodo(holidayId: string, id: string): Promise<TodoItem[]> {
+  const todos = await getTodos(holidayId);
   const next = todos.filter((t) => t.id !== id);
-  await redis.set(TODO_KV_KEY, next);
+  await redis.set(`todos:${holidayId}`, next);
+  return next;
+}
+
+// ─── Documents ───────────────────────────────────────────────────────────────
+
+export async function getDocuments(holidayId: string): Promise<HolidayDocument[]> {
+  return (await redis.get<HolidayDocument[]>(`documents:${holidayId}`)) ?? [];
+}
+
+export async function addDocument(holidayId: string, doc: HolidayDocument): Promise<HolidayDocument[]> {
+  const docs = await getDocuments(holidayId);
+  const next = [doc, ...docs];
+  await redis.set(`documents:${holidayId}`, next);
+  return next;
+}
+
+export async function deleteDocument(holidayId: string, id: string): Promise<HolidayDocument[]> {
+  const docs = await getDocuments(holidayId);
+  const next = docs.filter((d) => d.id !== id);
+  await redis.set(`documents:${holidayId}`, next);
   return next;
 }

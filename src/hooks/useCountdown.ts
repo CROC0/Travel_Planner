@@ -2,13 +2,12 @@
 
 import { useEffect, useState } from 'react';
 import type { CountdownValues } from '@/types';
-import { DEPARTURE_DATE } from '@/data/trip-config';
 
-function calculate(): CountdownValues {
+function calculate(target: Date): CountdownValues {
   if (typeof window === 'undefined') {
     return { days: 0, hours: 0, minutes: 0, seconds: 0, isExpired: false };
   }
-  const diff = DEPARTURE_DATE.getTime() - Date.now();
+  const diff = target.getTime() - Date.now();
   if (diff <= 0) {
     return { days: 0, hours: 0, minutes: 0, seconds: 0, isExpired: true };
   }
@@ -19,16 +18,17 @@ function calculate(): CountdownValues {
   return { days, hours, minutes, seconds, isExpired: false };
 }
 
-export function useCountdown(): CountdownValues {
+export function useCountdown(target: Date): CountdownValues {
   const [values, setValues] = useState<CountdownValues>({
     days: 0, hours: 0, minutes: 0, seconds: 0, isExpired: false,
   });
 
   useEffect(() => {
-    setValues(calculate());
-    const timer = setInterval(() => setValues(calculate()), 1000);
+    setValues(calculate(target));
+    const timer = setInterval(() => setValues(calculate(target)), 1000);
     return () => clearInterval(timer);
-  }, []);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [target.getTime()]);
 
   return values;
 }

@@ -29,13 +29,13 @@ function Separator() {
   );
 }
 
-export function CountdownTimer() {
-  const { days, hours, minutes, seconds, isExpired } = useCountdown();
+export function CountdownTimer({ target, expiredMessage }: { target: Date; expiredMessage?: string }) {
+  const { days, hours, minutes, seconds, isExpired } = useCountdown(target);
 
   if (isExpired) {
     return (
       <div className="text-center">
-        <p className="text-3xl font-bold text-[#ffd700] neon-glow-gold">🦁 We&apos;re in Singapore!</p>
+        <p className="text-3xl font-bold text-[#ffd700] neon-glow-gold">{expiredMessage ?? '✈️ Trip has started!'}</p>
       </div>
     );
   }

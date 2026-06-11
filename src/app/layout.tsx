@@ -10,11 +10,11 @@ const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Singapore 2026: Trip Planner",
-  description: "Our Singapore holiday planner: 25 Sep to 4 Oct 2026",
+  title: "Trip Planner",
+  description: "Plan your holidays with your crew",
   openGraph: {
-    title: "Singapore 2026",
-    description: "10 days in the Lion City",
+    title: "Trip Planner",
+    description: "Plan your holidays with your crew",
     type: "website",
   },
 };
