@@ -1,10 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { ArrowLeft, Plus, Settings, Trash2 } from 'lucide-react';
 import { nanoid } from 'nanoid';
-import { useHoliday } from '@/context/HolidayContext';
+import { useHoliday, useIsOwner } from '@/context/HolidayContext';
 import type { CrewMember } from '@/types';
 
 const COVER_EMOJIS = ['✈️', '🌏', '🏖️', '🏔️', '🗺️', '🦁', '🌸', '🎌', '🇪🇺', '🗼', '🏝️', '⛰️'];
@@ -15,6 +16,8 @@ const BLANK_MEMBER = { name: '', role: '', emoji: '', color: '#00e5cc', tagline:
 
 export default function EditHolidayPage() {
   const holiday = useHoliday();
+  const isOwner = useIsOwner();
+  const router = useRouter();
 
   const [form, setForm] = useState({
     name: holiday.name,
@@ -28,6 +31,12 @@ export default function EditHolidayPage() {
   const [addingMember, setAddingMember] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    if (!isOwner) router.replace(`/login?from=/holidays/${holiday.id}/edit`);
+  }, [isOwner, holiday.id, router]);
+
+  if (!isOwner) return null;
 
   function setField(key: string, value: string) {
     setForm((prev) => ({ ...prev, [key]: value }));
@@ -70,7 +79,7 @@ export default function EditHolidayPage() {
         setLoading(false);
         return;
       }
-      window.location.href = `/holidays/${holiday.id}`;
+      router.push(`/holidays/${holiday.id}`);
     } catch {
       setError('Something went wrong. Try again.');
       setLoading(false);

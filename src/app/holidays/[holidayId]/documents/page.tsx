@@ -1,10 +1,11 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { Download, FileText, FileImage, File, Trash2, Upload, FolderOpen } from 'lucide-react';
 import { PageWrapper } from '@/components/layout/PageWrapper';
 import { SectionHeading } from '@/components/shared/SectionHeading';
-import { useHoliday } from '@/context/HolidayContext';
+import { useHoliday, useIsOwner } from '@/context/HolidayContext';
 import type { HolidayDocument } from '@/types';
 
 function formatSize(bytes: number): string {
@@ -33,6 +34,8 @@ function docColor(contentType: string): string {
 
 export default function DocumentsPage() {
   const holiday = useHoliday();
+  const isOwner = useIsOwner();
+  const router = useRouter();
   const [docs, setDocs] = useState<HolidayDocument[]>([]);
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
@@ -41,11 +44,14 @@ export default function DocumentsPage() {
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
+    if (!isOwner) { router.replace(`/login?from=/holidays/${holiday.id}/documents`); return; }
     fetch(`/api/holidays/${holiday.id}/documents`)
       .then((r) => r.json())
       .then((data) => { if (Array.isArray(data)) setDocs(data); })
       .finally(() => setLoading(false));
-  }, [holiday.id]);
+  }, [holiday.id, isOwner, router]);
+
+  if (!isOwner) return null;
 
   const uploadFile = useCallback(async (file: File) => {
     setUploading(true);

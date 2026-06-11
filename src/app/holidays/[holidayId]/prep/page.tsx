@@ -1,11 +1,12 @@
 'use client';
 
-import { useState, useRef, KeyboardEvent } from 'react';
+import { useState, useRef, useEffect, KeyboardEvent } from 'react';
+import { useRouter } from 'next/navigation';
 import { Trash2, Pencil, Check, X } from 'lucide-react';
 import { PageWrapper } from '@/components/layout/PageWrapper';
 import { SectionHeading } from '@/components/shared/SectionHeading';
 import { useTodos } from '@/hooks/useTodos';
-import { useHoliday } from '@/context/HolidayContext';
+import { useHoliday, useIsOwner } from '@/context/HolidayContext';
 import type { TodoCategory } from '@/types';
 
 const CATEGORIES: { value: TodoCategory; label: string; color: string; emoji: string }[] = [
@@ -67,10 +68,18 @@ function TodoRow({ item, onToggle, onDelete, onEdit }: {
 
 export default function PrepPage() {
   const holiday = useHoliday();
+  const isOwner = useIsOwner();
+  const router = useRouter();
   const { todos, loading, completed, total, addTodo, toggleTodo, deleteTodo, editTodo } = useTodos(holiday.id);
   const [input, setInput] = useState('');
   const [category, setCategory] = useState<TodoCategory>('general');
   const [filter, setFilter] = useState<TodoCategory | 'all'>('all');
+
+  useEffect(() => {
+    if (!isOwner) router.replace(`/login?from=/holidays/${holiday.id}/prep`);
+  }, [isOwner, holiday.id, router]);
+
+  if (!isOwner) return null;
 
   function handleAdd() {
     const trimmed = input.trim();
