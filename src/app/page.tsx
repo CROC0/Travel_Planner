@@ -1,6 +1,7 @@
 import { HeroSection } from '@/components/home/HeroSection';
 import { TripSummaryCard } from '@/components/home/TripSummaryCard';
 import { QuickNavGrid } from '@/components/home/QuickNavGrid';
+import { FamilyCrew } from '@/components/home/FamilyCrew';
 import { SectionHeading } from '@/components/shared/SectionHeading';
 
 export default function HomePage() {
@@ -9,6 +10,15 @@ export default function HomePage() {
       <HeroSection />
 
       <div className="max-w-5xl mx-auto px-4 py-8 sm:py-12 space-y-10 sm:space-y-16">
+        <section>
+          <SectionHeading
+            title="The Crew"
+            subtitle="Four Taylors. One city. Zero chill."
+            accent="teal"
+          />
+          <FamilyCrew />
+        </section>
+
         <section>
           <SectionHeading
             title="Trip at a glance"

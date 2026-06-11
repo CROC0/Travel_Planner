@@ -22,7 +22,7 @@ export function HeroSection() {
         {/* Pre-title */}
         <div className="inline-flex items-center gap-2 glass rounded-full px-4 py-2 text-sm text-[#8888aa]">
           <span className="w-2 h-2 rounded-full bg-[#00e5cc] animate-[glow-pulse_2s_ease-in-out_infinite]" />
-          25 Sep – 4 Oct 2026
+          Taylor Family · 25 Sep – 4 Oct 2026
         </div>
 
         {/* Main title */}
@@ -30,9 +30,6 @@ export function HeroSection() {
           <h1 className="text-4xl sm:text-6xl md:text-8xl lg:text-9xl font-black tracking-tight">
             <span className="shimmer-text">SINGAPORE</span>
           </h1>
-          <p className="text-base sm:text-xl md:text-2xl text-[#8888aa] font-light tracking-wide">
-            The Lion City awaits
-          </p>
         </div>
 
         {/* Countdown */}
