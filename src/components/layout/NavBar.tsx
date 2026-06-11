@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Plane, Calendar, Map, Compass, Home } from 'lucide-react';
+import { Plane, Calendar, Map, Compass, Home, ClipboardList } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const navLinks = [
@@ -10,6 +10,7 @@ const navLinks = [
   { href: '/itinerary', label: 'Itinerary', icon: Map },
   { href: '/calendar', label: 'Calendar', icon: Calendar },
   { href: '/explore', label: 'Explore', icon: Compass },
+  { href: '/prep', label: 'Prep', icon: ClipboardList },
 ];
 
 export function NavBar() {

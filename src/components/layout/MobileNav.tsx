@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Map, Calendar, Compass } from 'lucide-react';
+import { Home, Map, Calendar, Compass, ClipboardList } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const tabs = [
@@ -10,6 +10,7 @@ const tabs = [
   { href: '/itinerary', label: 'Itinerary', icon: Map },
   { href: '/calendar', label: 'Calendar', icon: Calendar },
   { href: '/explore', label: 'Explore', icon: Compass },
+  { href: '/prep', label: 'Prep', icon: ClipboardList },
 ];
 
 export function MobileNav() {
@@ -30,7 +31,7 @@ export function MobileNav() {
               )}
             >
               <Icon className={cn('w-5 h-5', active && 'drop-shadow-[0_0_8px_#00e5cc]')} />
-              <span className="text-[10px] font-medium">{label}</span>
+              <span className="text-[9px] font-medium">{label}</span>
               {active && (
                 <span className="absolute bottom-0 w-8 h-0.5 bg-[#00e5cc] rounded-t-full" />
               )}

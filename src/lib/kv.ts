@@ -1,6 +1,6 @@
 import { Redis } from '@upstash/redis';
-import type { Itinerary, DayPlan } from '@/types';
-import { ITINERARY_KV_KEY } from '@/lib/constants';
+import type { Itinerary, DayPlan, TodoItem } from '@/types';
+import { ITINERARY_KV_KEY, TODO_KV_KEY } from '@/lib/constants';
 import { TRIP_DAYS, TRIP_DAY_DATES, TRIP_DAY_LABELS } from '@/data/trip-config';
 
 const redis = new Redis({
@@ -25,7 +25,9 @@ export async function getItinerary(): Promise<Itinerary> {
   const empty = emptyItinerary();
   return empty.map((emptyDay) => {
     const stored = data.find((d) => d.day === emptyDay.day);
-    return stored ?? emptyDay;
+    if (!stored) return emptyDay;
+    // Always use label/date from config, not stale stored values
+    return { ...stored, label: emptyDay.label, date: emptyDay.date };
   });
 }
 
@@ -43,4 +45,32 @@ export async function resetDay(day: number): Promise<DayPlan> {
   if (!emptyDay) throw new Error(`Invalid day: ${day}`);
   await setDay(emptyDay);
   return emptyDay;
+}
+
+// ─── Todos ────────────────────────────────────────────────────────────────────
+
+export async function getTodos(): Promise<TodoItem[]> {
+  const data = await redis.get<TodoItem[]>(TODO_KV_KEY);
+  return data ?? [];
+}
+
+export async function addTodo(item: TodoItem): Promise<TodoItem[]> {
+  const todos = await getTodos();
+  const next = [item, ...todos];
+  await redis.set(TODO_KV_KEY, next);
+  return next;
+}
+
+export async function updateTodo(id: string, patch: Partial<Pick<TodoItem, 'text' | 'completed' | 'category'>>): Promise<TodoItem[]> {
+  const todos = await getTodos();
+  const next = todos.map((t) => (t.id === id ? { ...t, ...patch } : t));
+  await redis.set(TODO_KV_KEY, next);
+  return next;
+}
+
+export async function deleteTodo(id: string): Promise<TodoItem[]> {
+  const todos = await getTodos();
+  const next = todos.filter((t) => t.id !== id);
+  await redis.set(TODO_KV_KEY, next);
+  return next;
 }

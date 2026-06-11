@@ -102,3 +102,13 @@ export interface AuthResponse {
   success: boolean;
   message?: string;
 }
+
+export type TodoCategory = 'general' | 'documents' | 'packing' | 'bookings' | 'money' | 'health';
+
+export interface TodoItem {
+  id: string;
+  text: string;
+  completed: boolean;
+  category: TodoCategory;
+  createdAt: number;
+}

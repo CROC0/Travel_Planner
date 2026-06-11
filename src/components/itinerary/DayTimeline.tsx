@@ -66,6 +66,7 @@ export function DayTimeline({ dayPlan, onAdd, onUpdate, onDelete }: DayTimelineP
       />
 
       <AddActivityModal
+        key={editTarget?.id ?? 'edit'}
         open={!!editTarget}
         onClose={() => setEditTarget(null)}
         onSave={(form) => {

@@ -96,20 +96,20 @@ export function ActivityItem({ activity, onEdit, onDelete }: ActivityItemProps) 
                 href={activity.googleMapsUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-1.5 rounded-lg hover:bg-white/10 text-[#8888aa] hover:text-[#00e5cc] transition-colors"
+                className="p-1.5 rounded-lg hover:bg-white/10 text-[#8888aa] hover:text-[#00e5cc] transition-colors cursor-pointer"
               >
                 <ExternalLink className="w-3.5 h-3.5" />
               </a>
             )}
             <button
               onClick={() => onEdit(activity)}
-              className="p-1.5 rounded-lg hover:bg-white/10 text-[#8888aa] hover:text-[#ffd700] transition-colors"
+              className="p-1.5 rounded-lg hover:bg-white/10 text-[#8888aa] hover:text-[#ffd700] transition-colors cursor-pointer"
             >
               <Pencil className="w-3.5 h-3.5" />
             </button>
             <button
               onClick={() => onDelete(activity.id)}
-              className="p-1.5 rounded-lg hover:bg-red-500/10 text-[#8888aa] hover:text-red-400 transition-colors"
+              className="p-1.5 rounded-lg hover:bg-red-500/10 text-[#8888aa] hover:text-red-400 transition-colors cursor-pointer"
             >
               <Trash2 className="w-3.5 h-3.5" />
             </button>

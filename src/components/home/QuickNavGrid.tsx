@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Map, Calendar, Compass, Utensils, Info, Star } from 'lucide-react';
+import { Map, Calendar, Compass, Utensils, Info, Star, ClipboardList } from 'lucide-react';
 
 const cards = [
   {
@@ -49,6 +49,14 @@ const cards = [
     description: 'Tips & transport',
     color: '#10b981',
     glow: '0 0 30px #10b98133',
+  },
+  {
+    href: '/prep',
+    icon: ClipboardList,
+    title: 'Prep',
+    description: 'Trip to-do list',
+    color: '#ffd700',
+    glow: '0 0 30px #ffd70033',
   },
 ];
 

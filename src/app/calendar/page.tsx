@@ -10,7 +10,7 @@ import { useItinerary } from '@/hooks/useItinerary';
 type View = 'schedule' | 'month';
 
 export default function CalendarPage() {
-  const { itinerary, loading } = useItinerary();
+  const { itinerary, loading, addActivity } = useItinerary();
   const [view, setView] = useState<View>('schedule');
 
   return (
@@ -79,7 +79,7 @@ export default function CalendarPage() {
             <div className="w-8 h-8 rounded-full border-2 border-[#00e5cc] border-t-transparent animate-spin" />
           </div>
         ) : view === 'schedule' ? (
-          <ScheduleView itinerary={itinerary} />
+          <ScheduleView itinerary={itinerary} onAdd={addActivity} />
         ) : (
           <div className="max-w-3xl mx-auto">
             <TripCalendar itinerary={itinerary} />

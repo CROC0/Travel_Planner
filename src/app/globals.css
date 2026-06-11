@@ -205,4 +205,10 @@
     @apply font-sans;
     color-scheme: dark;
   }
+  button:not(:disabled) {
+    cursor: pointer;
+  }
+  button:disabled {
+    cursor: not-allowed;
+  }
 }
