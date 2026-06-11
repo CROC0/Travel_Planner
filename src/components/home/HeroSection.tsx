@@ -35,7 +35,7 @@ export function HeroSection() {
         {/* Countdown */}
         <div className="pt-2 sm:pt-4">
           <p className="text-[#8888aa] text-xs tracking-widest uppercase mb-4 sm:mb-6">Departure in</p>
-          <CountdownTimer />
+          <CountdownTimer target={new Date('2026-09-25T00:00:00+08:00')} expiredMessage="🦁 We're in Singapore!" />
         </div>
 
         {/* Scroll cue */}

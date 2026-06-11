@@ -2,31 +2,32 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
-import { Plane, Lock } from 'lucide-react';
+import { Plane, UserPlus } from 'lucide-react';
 
-export function LoginForm() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+export function RegisterForm() {
+  const [form, setForm] = useState({ name: '', email: '', password: '' });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const params = useSearchParams();
+
+  function set(key: string, value: string) {
+    setForm((prev) => ({ ...prev, [key]: value }));
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
     setError('');
     try {
-      const res = await fetch('/api/auth/login', {
+      const res = await fetch('/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify(form),
       });
       if (res.ok) {
-        window.location.href = params.get('from') ?? '/';
+        window.location.href = '/';
       } else {
         const data = await res.json();
-        setError(data.message ?? 'Invalid email or password');
+        setError(data.message ?? 'Registration failed');
         setLoading(false);
       }
     } catch {
@@ -42,38 +43,47 @@ export function LoginForm() {
         style={{ backgroundImage: 'linear-gradient(rgba(0,229,204,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(0,229,204,0.3) 1px, transparent 1px)', backgroundSize: '60px 60px' }}
       />
       <div className="relative z-10 w-full max-w-md">
-        <div className="text-center mb-8 sm:mb-10">
-          <div className="inline-flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 rounded-2xl glass box-glow-teal mb-5 sm:mb-6">
-            <Plane className="w-7 h-7 sm:w-8 sm:h-8 text-[#00e5cc]" />
+        <div className="text-center mb-8">
+          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl glass box-glow-teal mb-5">
+            <Plane className="w-7 h-7 text-[#00e5cc]" />
           </div>
-          <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2">
+          <h1 className="text-3xl font-bold text-white mb-2">
             <span className="shimmer-text">TRIP PLANNER</span>
           </h1>
-          <p className="text-[#8888aa] text-sm tracking-widest uppercase">Plan your next adventure</p>
+          <p className="text-[#8888aa] text-sm">Create your account to start planning</p>
         </div>
 
         <div className="glass rounded-2xl p-6 sm:p-8 box-glow-teal">
           <div className="flex items-center gap-2 mb-6">
-            <Lock className="w-4 h-4 text-[#00e5cc]" />
-            <span className="text-[#8888aa] text-sm">Sign in to your account</span>
+            <UserPlus className="w-4 h-4 text-[#00e5cc]" />
+            <span className="text-[#8888aa] text-sm">New account</span>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Email address"
+              type="text"
+              value={form.name}
+              onChange={(e) => set('name', e.target.value)}
+              placeholder="Your name"
               required
               autoFocus
               className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-[#8888aa] focus:outline-none focus:border-[#00e5cc] focus:ring-1 focus:ring-[#00e5cc] transition-colors"
             />
             <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Password"
+              type="email"
+              value={form.email}
+              onChange={(e) => set('email', e.target.value)}
+              placeholder="Email address"
               required
+              className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-[#8888aa] focus:outline-none focus:border-[#00e5cc] focus:ring-1 focus:ring-[#00e5cc] transition-colors"
+            />
+            <input
+              type="password"
+              value={form.password}
+              onChange={(e) => set('password', e.target.value)}
+              placeholder="Password (min 6 characters)"
+              required
+              minLength={6}
               className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-[#8888aa] focus:outline-none focus:border-[#00e5cc] focus:ring-1 focus:ring-[#00e5cc] transition-colors"
             />
 
@@ -81,18 +91,18 @@ export function LoginForm() {
 
             <button
               type="submit"
-              disabled={loading || !email || !password}
-              className="w-full py-3 rounded-xl font-semibold text-[#0a0a0f] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              disabled={loading || !form.name || !form.email || !form.password}
+              className="w-full py-3 rounded-xl font-semibold text-[#0a0a0f] transition-all duration-200 disabled:opacity-50"
               style={{ background: loading ? '#00e5cc88' : 'linear-gradient(135deg, #00e5cc, #00b8a6)', boxShadow: loading ? 'none' : '0 0 20px #00e5cc44' }}
             >
-              {loading ? 'Signing in…' : 'Sign In →'}
+              {loading ? 'Creating account…' : 'Create Account →'}
             </button>
           </form>
         </div>
 
         <p className="text-center text-[#8888aa] text-xs mt-6">
-          No account yet?{' '}
-          <Link href="/register" className="text-[#00e5cc] hover:underline">Create one</Link>
+          Already have an account?{' '}
+          <Link href="/login" className="text-[#00e5cc] hover:underline">Sign in</Link>
         </p>
       </div>
     </main>

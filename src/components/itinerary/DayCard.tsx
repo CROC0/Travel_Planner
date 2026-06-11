@@ -6,9 +6,10 @@ import type { DayPlan } from '@/types';
 
 interface DayCardProps {
   dayPlan: DayPlan;
+  holidayId: string;
 }
 
-export function DayCard({ dayPlan }: DayCardProps) {
+export function DayCard({ dayPlan, holidayId }: DayCardProps) {
   const { day, date, label, activities } = dayPlan;
   const formattedDate = new Date(date + 'T00:00:00').toLocaleDateString('en-AU', {
     weekday: 'short',
@@ -20,7 +21,7 @@ export function DayCard({ dayPlan }: DayCardProps) {
   const lastActivity = activities[activities.length - 1];
 
   return (
-    <Link href={`/itinerary/${day}`} className="group block">
+    <Link href={`/holidays/${holidayId}/itinerary/${day}`} className="group block">
       <div className="glass rounded-2xl p-4 sm:p-5 flex items-center gap-3 sm:gap-4 hover:border-[#00e5cc]/30 transition-all duration-200 hover:bg-white/[0.03]"
         style={{ border: '1px solid rgba(255,255,255,0.06)' }}
       >
