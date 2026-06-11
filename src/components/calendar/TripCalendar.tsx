@@ -5,6 +5,7 @@ import { getDaysInMonth, getFirstDayOfMonth, toDateStr } from '@/lib/date-utils'
 import { CalendarDayCell } from './CalendarDayCell';
 import { CalendarLegend } from './CalendarLegend';
 
+const DAYS_OF_WEEK_SHORT = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 const DAYS_OF_WEEK = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
 function MonthGrid({ year, month, monthName, itinerary, today }: {
@@ -25,14 +26,15 @@ function MonthGrid({ year, month, monthName, itinerary, today }: {
   while (cells.length % 7 !== 0) cells.push(null);
 
   return (
-    <div className="glass rounded-2xl p-5 flex-1" style={{ border: '1px solid rgba(255,255,255,0.06)' }}>
-      <h3 className="text-white font-semibold text-lg mb-4 text-center">
+    <div className="glass rounded-2xl p-3 sm:p-5 flex-1" style={{ border: '1px solid rgba(255,255,255,0.06)' }}>
+      <h3 className="text-white font-semibold text-base sm:text-lg mb-3 sm:mb-4 text-center">
         {monthName} <span className="text-[#8888aa]">{year}</span>
       </h3>
       <div className="grid grid-cols-7 gap-1 mb-2">
-        {DAYS_OF_WEEK.map((d) => (
+        {DAYS_OF_WEEK.map((d, i) => (
           <div key={d} className="text-center text-[#8888aa] text-xs font-medium py-1">
-            {d}
+            <span className="hidden sm:inline">{d}</span>
+            <span className="sm:hidden">{DAYS_OF_WEEK_SHORT[i]}</span>
           </div>
         ))}
       </div>

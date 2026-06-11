@@ -12,15 +12,16 @@ export function ItineraryProgress({ itinerary }: ItineraryProgressProps) {
   const progress = Math.round((daysWithActivities / itinerary.length) * 100);
 
   return (
-    <div className="glass rounded-2xl p-5 mb-6" style={{ border: '1px solid rgba(255,255,255,0.06)' }}>
-      <div className="flex items-center justify-between mb-3">
-        <div>
+    <div className="glass rounded-2xl p-4 sm:p-5 mb-5 sm:mb-6" style={{ border: '1px solid rgba(255,255,255,0.06)' }}>
+      <div className="flex items-start sm:items-center justify-between gap-3 mb-3">
+        <div className="min-w-0">
           <p className="text-white font-semibold text-sm">Planning progress</p>
-          <p className="text-[#8888aa] text-xs">
-            {daysWithActivities} of {itinerary.length} days planned · {totalActivities} activities
+          <p className="text-[#8888aa] text-xs leading-relaxed">
+            {daysWithActivities} of {itinerary.length} days planned
+            {' · '}{totalActivities} {totalActivities === 1 ? 'activity' : 'activities'}
           </p>
         </div>
-        <span className="text-[#00e5cc] font-bold text-lg">{progress}%</span>
+        <span className="flex-shrink-0 text-[#00e5cc] font-bold text-lg">{progress}%</span>
       </div>
       <div className="h-2 bg-white/10 rounded-full overflow-hidden">
         <div

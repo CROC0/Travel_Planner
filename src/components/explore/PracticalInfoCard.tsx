@@ -29,7 +29,7 @@ export function PracticalInfoCard({ info }: PracticalInfoCardProps) {
 
   return (
     <div
-      className="glass rounded-2xl p-5"
+      className="glass rounded-2xl p-4 sm:p-5"
       style={{ border: `1px solid ${color}20` }}
     >
       <div className="flex items-center gap-3 mb-3">
@@ -39,14 +39,14 @@ export function PracticalInfoCard({ info }: PracticalInfoCardProps) {
         >
           <Icon className="w-4 h-4" style={{ color }} />
         </div>
-        <h3 className="text-white font-semibold text-sm">{info.title}</h3>
+        <h3 className="text-white font-semibold text-sm leading-snug">{info.title}</h3>
       </div>
 
       <div className="space-y-1">
         {lines.map((line, i) => {
           if (line.startsWith('**') && line.endsWith('**')) {
             return (
-              <p key={i} className="text-white font-medium text-xs mt-2">
+              <p key={i} className="text-white font-medium text-xs mt-2 break-words">
                 {line.replace(/\*\*/g, '')}
               </p>
             );
@@ -54,9 +54,9 @@ export function PracticalInfoCard({ info }: PracticalInfoCardProps) {
           if (line.startsWith('- ')) {
             return (
               <div key={i} className="flex items-start gap-1.5">
-                <span className="text-[#8888aa] mt-1 text-xs">•</span>
+                <span className="text-[#8888aa] mt-1 text-xs flex-shrink-0">•</span>
                 <p
-                  className="text-[#8888aa] text-xs"
+                  className="text-[#8888aa] text-xs break-words min-w-0"
                   dangerouslySetInnerHTML={{
                     __html: line
                       .slice(2)
@@ -69,7 +69,7 @@ export function PracticalInfoCard({ info }: PracticalInfoCardProps) {
           return (
             <p
               key={i}
-              className="text-[#8888aa] text-xs"
+              className="text-[#8888aa] text-xs break-words"
               dangerouslySetInnerHTML={{
                 __html: line.replace(/\*\*(.*?)\*\*/g, '<strong class="text-white">$1</strong>'),
               }}

@@ -52,13 +52,13 @@ export function FoodCard({ spot, onAddToDay }: FoodCardProps) {
           </div>
         </div>
 
-        <div className="p-4">
+        <div className="p-3 sm:p-4">
           <h3 className="text-white font-semibold text-sm mb-0.5 group-hover:text-[#ffd700] transition-colors">
             {spot.name}
           </h3>
-          <div className="flex items-center gap-1 mb-2">
-            <MapPin className="w-3 h-3 text-[#8888aa]" />
-            <p className="text-[#8888aa] text-xs">{spot.location}</p>
+          <div className="flex items-center gap-1 mb-2 min-w-0">
+            <MapPin className="w-3 h-3 flex-shrink-0 text-[#8888aa]" />
+            <p className="text-[#8888aa] text-xs truncate">{spot.location}</p>
           </div>
           <p className="text-[#8888aa] text-xs line-clamp-2 mb-3">{spot.description}</p>
 
@@ -80,17 +80,17 @@ export function FoodCard({ spot, onAddToDay }: FoodCardProps) {
               href={spot.googleMapsUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex-1 flex items-center justify-center gap-1.5 text-xs text-[#8888aa] hover:text-[#ffd700] transition-colors glass rounded-lg py-2"
+              className="flex-1 flex items-center justify-center gap-1.5 text-xs text-[#8888aa] hover:text-[#ffd700] transition-colors glass rounded-lg py-2.5 min-h-[40px]"
             >
-              <MapPin className="w-3.5 h-3.5" />
+              <MapPin className="w-3.5 h-3.5 flex-shrink-0" />
               Map
             </a>
             {onAddToDay && (
               <button
                 onClick={() => setDayPickerOpen(true)}
-                className="flex-1 flex items-center justify-center gap-1.5 text-xs bg-[#ffd700]/10 text-[#ffd700] hover:bg-[#ffd700]/20 rounded-lg py-2 transition-colors border border-[#ffd700]/20"
+                className="flex-1 flex items-center justify-center gap-1.5 text-xs bg-[#ffd700]/10 text-[#ffd700] hover:bg-[#ffd700]/20 rounded-lg py-2.5 min-h-[40px] transition-colors border border-[#ffd700]/20"
               >
-                <Plus className="w-3.5 h-3.5" />
+                <Plus className="w-3.5 h-3.5 flex-shrink-0" />
                 Add to day
               </button>
             )}
@@ -99,7 +99,7 @@ export function FoodCard({ spot, onAddToDay }: FoodCardProps) {
       </div>
 
       <Dialog open={dayPickerOpen} onOpenChange={setDayPickerOpen}>
-        <DialogContent className="bg-[#12121a] border border-white/10 text-white max-w-xs">
+        <DialogContent className="bg-[#12121a] border border-white/10 text-white w-[calc(100vw-2rem)] max-w-xs mx-auto">
           <DialogHeader>
             <DialogTitle className="text-white text-sm">Add to which day?</DialogTitle>
           </DialogHeader>
@@ -113,7 +113,7 @@ export function FoodCard({ spot, onAddToDay }: FoodCardProps) {
                   onAddToDay?.(day, spot);
                   setDayPickerOpen(false);
                 }}
-                className="aspect-square p-0 flex items-center justify-center text-sm"
+                className="aspect-square p-0 flex items-center justify-center text-sm min-h-[40px]"
               >
                 {day}
               </GlowButton>

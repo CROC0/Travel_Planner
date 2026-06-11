@@ -15,10 +15,10 @@ export default function CalendarPage() {
 
   return (
     <PageWrapper>
-      <div className="max-w-full px-4 py-8">
+      <div className="max-w-full px-4 py-5 sm:py-8">
 
         {/* Header + toggle */}
-        <div className="max-w-5xl mx-auto flex items-center justify-between mb-6 gap-4 flex-wrap">
+        <div className="max-w-5xl mx-auto flex items-center justify-between mb-4 sm:mb-6 gap-3 flex-wrap">
           <div>
             <div className="flex items-center gap-3 mb-1">
               <div className="h-0.5 w-8 rounded-full bg-[#ffd700]" />
@@ -54,7 +54,7 @@ export default function CalendarPage() {
 
         {/* Category legend */}
         {view === 'schedule' && (
-          <div className="max-w-5xl mx-auto mb-4 flex flex-wrap gap-x-4 gap-y-1.5">
+          <div className="max-w-5xl mx-auto mb-3 sm:mb-4 flex flex-wrap gap-x-3 gap-y-1.5">
             {[
               ['#00e5cc', 'Sightseeing'],
               ['#ffd700', 'Food'],

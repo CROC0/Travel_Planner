@@ -8,7 +8,7 @@ export default function HomePage() {
     <div className="min-h-screen">
       <HeroSection />
 
-      <div className="max-w-5xl mx-auto px-4 py-12 space-y-16">
+      <div className="max-w-5xl mx-auto px-4 py-8 sm:py-12 space-y-10 sm:space-y-16">
         <section>
           <SectionHeading
             title="Trip at a glance"

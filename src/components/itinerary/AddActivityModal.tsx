@@ -61,9 +61,9 @@ export function AddActivityModal({ open, onClose, onSave, day, initial, mode = '
 
   return (
     <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
-      <DialogContent className="bg-[#12121a] border border-white/10 text-white max-w-md">
+      <DialogContent className="bg-[#12121a] border border-white/10 text-white max-w-md max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="text-white">
+          <DialogTitle className="text-white text-sm sm:text-base">
             {mode === 'edit' ? 'Edit activity' : `Add activity — Day ${day}`}
           </DialogTitle>
         </DialogHeader>
@@ -71,10 +71,10 @@ export function AddActivityModal({ open, onClose, onSave, day, initial, mode = '
         <form onSubmit={handleSubmit} className="space-y-3 mt-2">
           <div className="flex gap-2">
             <Input
-              placeholder="Emoji (optional)"
+              placeholder="Emoji"
               value={form.emoji}
               onChange={(e) => set('emoji', e.target.value)}
-              className="w-24 bg-white/5 border-white/10 text-white placeholder-[#8888aa]"
+              className="w-16 sm:w-24 bg-white/5 border-white/10 text-white placeholder-[#8888aa]"
               maxLength={2}
             />
             <Input
@@ -83,7 +83,7 @@ export function AddActivityModal({ open, onClose, onSave, day, initial, mode = '
               onChange={(e) => set('title', e.target.value)}
               required
               autoFocus
-              className="flex-1 bg-white/5 border-white/10 text-white placeholder-[#8888aa]"
+              className="flex-1 min-w-0 bg-white/5 border-white/10 text-white placeholder-[#8888aa]"
             />
           </div>
 
@@ -95,18 +95,24 @@ export function AddActivityModal({ open, onClose, onSave, day, initial, mode = '
           />
 
           <div className="flex gap-2">
-            <Input
-              type="time"
-              value={form.startTime}
-              onChange={(e) => set('startTime', e.target.value)}
-              className="flex-1 bg-white/5 border-white/10 text-white"
-            />
-            <Input
-              type="time"
-              value={form.endTime}
-              onChange={(e) => set('endTime', e.target.value)}
-              className="flex-1 bg-white/5 border-white/10 text-white"
-            />
+            <div className="flex-1 min-w-0">
+              <label className="text-[#8888aa] text-xs mb-1 block">Start</label>
+              <Input
+                type="time"
+                value={form.startTime}
+                onChange={(e) => set('startTime', e.target.value)}
+                className="w-full bg-white/5 border-white/10 text-white"
+              />
+            </div>
+            <div className="flex-1 min-w-0">
+              <label className="text-[#8888aa] text-xs mb-1 block">End</label>
+              <Input
+                type="time"
+                value={form.endTime}
+                onChange={(e) => set('endTime', e.target.value)}
+                className="w-full bg-white/5 border-white/10 text-white"
+              />
+            </div>
           </div>
 
           <Select value={form.category} onValueChange={(v) => v && set('category', v)}>

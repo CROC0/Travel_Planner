@@ -35,7 +35,7 @@ export function AttractionCard({ attraction, onAddToDay }: AttractionCardProps) 
           </div>
         </div>
 
-        <div className="p-4">
+        <div className="p-3 sm:p-4">
           <h3 className="text-white font-semibold text-sm mb-1 group-hover:text-[#00e5cc] transition-colors">
             {attraction.name}
           </h3>
@@ -44,21 +44,21 @@ export function AttractionCard({ attraction, onAddToDay }: AttractionCardProps) 
           <div className="space-y-1.5 mb-3">
             {attraction.entryFee && (
               <div className="flex items-center gap-1.5 text-xs text-[#8888aa]">
-                <Tag className="w-3 h-3 text-[#ffd700]" />
-                {attraction.entryFee}
+                <Tag className="w-3 h-3 flex-shrink-0 text-[#ffd700]" />
+                <span className="truncate">{attraction.entryFee}</span>
               </div>
             )}
             {attraction.openingHours && (
               <div className="flex items-center gap-1.5 text-xs text-[#8888aa]">
-                <Clock className="w-3 h-3 text-[#00e5cc]" />
-                {attraction.openingHours}
+                <Clock className="w-3 h-3 flex-shrink-0 text-[#00e5cc]" />
+                <span className="truncate">{attraction.openingHours}</span>
               </div>
             )}
           </div>
 
           {attraction.tipText && (
             <div className="glass rounded-lg p-2.5 mb-3">
-              <p className="text-xs text-[#ffd700]">💡 {attraction.tipText}</p>
+              <p className="text-xs text-[#ffd700] line-clamp-3">💡 {attraction.tipText}</p>
             </div>
           )}
 
@@ -67,17 +67,17 @@ export function AttractionCard({ attraction, onAddToDay }: AttractionCardProps) 
               href={attraction.googleMapsUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex-1 flex items-center justify-center gap-1.5 text-xs text-[#8888aa] hover:text-[#00e5cc] transition-colors glass rounded-lg py-2"
+              className="flex-1 flex items-center justify-center gap-1.5 text-xs text-[#8888aa] hover:text-[#00e5cc] transition-colors glass rounded-lg py-2.5 min-h-[40px]"
             >
-              <MapPin className="w-3.5 h-3.5" />
+              <MapPin className="w-3.5 h-3.5 flex-shrink-0" />
               Map
             </a>
             {onAddToDay && (
               <button
                 onClick={() => setDayPickerOpen(true)}
-                className="flex-1 flex items-center justify-center gap-1.5 text-xs bg-[#00e5cc]/10 text-[#00e5cc] hover:bg-[#00e5cc]/20 rounded-lg py-2 transition-colors border border-[#00e5cc]/20"
+                className="flex-1 flex items-center justify-center gap-1.5 text-xs bg-[#00e5cc]/10 text-[#00e5cc] hover:bg-[#00e5cc]/20 rounded-lg py-2.5 min-h-[40px] transition-colors border border-[#00e5cc]/20"
               >
-                <Plus className="w-3.5 h-3.5" />
+                <Plus className="w-3.5 h-3.5 flex-shrink-0" />
                 Add to day
               </button>
             )}
@@ -86,7 +86,7 @@ export function AttractionCard({ attraction, onAddToDay }: AttractionCardProps) 
       </div>
 
       <Dialog open={dayPickerOpen} onOpenChange={setDayPickerOpen}>
-        <DialogContent className="bg-[#12121a] border border-white/10 text-white max-w-xs">
+        <DialogContent className="bg-[#12121a] border border-white/10 text-white w-[calc(100vw-2rem)] max-w-xs mx-auto">
           <DialogHeader>
             <DialogTitle className="text-white text-sm">Add to which day?</DialogTitle>
           </DialogHeader>
@@ -100,7 +100,7 @@ export function AttractionCard({ attraction, onAddToDay }: AttractionCardProps) 
                   onAddToDay?.(day, attraction);
                   setDayPickerOpen(false);
                 }}
-                className="aspect-square p-0 flex items-center justify-center text-sm"
+                className="aspect-square p-0 flex items-center justify-center text-sm min-h-[40px]"
               >
                 {day}
               </GlowButton>

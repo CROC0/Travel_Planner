@@ -11,11 +11,11 @@ const stats = [
 
 export function TripSummaryCard() {
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
       {stats.map(({ icon: Icon, label, sub }) => (
         <div
           key={label}
-          className="glass rounded-2xl p-4 flex flex-col gap-2 hover:border-[#00e5cc]/30 transition-colors"
+          className="glass rounded-2xl p-3 sm:p-4 flex flex-col gap-2 hover:border-[#00e5cc]/30 transition-colors"
           style={{ border: '1px solid rgba(255,255,255,0.06)' }}
         >
           <Icon className="w-5 h-5 text-[#00e5cc]" />

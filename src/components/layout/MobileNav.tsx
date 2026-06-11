@@ -25,7 +25,7 @@ export function MobileNav() {
               key={href}
               href={href}
               className={cn(
-                'flex-1 flex flex-col items-center justify-center gap-1 transition-all duration-200',
+                'relative flex-1 flex flex-col items-center justify-center gap-1 transition-all duration-200',
                 active ? 'text-[#00e5cc]' : 'text-[#8888aa]'
               )}
             >

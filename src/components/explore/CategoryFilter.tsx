@@ -10,13 +10,13 @@ interface CategoryFilterProps<T extends string> {
 
 export function CategoryFilter<T extends string>({ options, active, onChange }: CategoryFilterProps<T>) {
   return (
-    <div className="flex flex-wrap gap-2 mb-6">
+    <div className="flex flex-wrap gap-2 mb-5 sm:mb-6">
       {options.map(({ value, label }) => (
         <button
           key={value}
           onClick={() => onChange(value)}
           className={cn(
-            'px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-200',
+            'px-3 sm:px-4 py-2 rounded-full text-xs font-medium transition-all duration-200 min-h-[36px]',
             active === value
               ? 'bg-[#00e5cc] text-[#0a0a0f]'
               : 'glass text-[#8888aa] hover:text-white hover:border-[#00e5cc]/30',

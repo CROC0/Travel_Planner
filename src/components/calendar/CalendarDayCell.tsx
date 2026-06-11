@@ -28,7 +28,7 @@ export function CalendarDayCell({ year, month, day, itinerary, today }: Calendar
   const cell = (
     <div
       className={cn(
-        'aspect-square rounded-xl flex flex-col items-center justify-center relative transition-all duration-200 text-sm font-medium',
+        'aspect-square rounded-lg sm:rounded-xl flex flex-col items-center justify-center relative transition-all duration-200 text-xs sm:text-sm font-medium',
         isToday && 'ring-1 ring-white/30',
         isTrip
           ? 'cursor-pointer hover:scale-105'
@@ -50,7 +50,7 @@ export function CalendarDayCell({ year, month, day, itinerary, today }: Calendar
     >
       <span className={cn(isTrip && 'text-white font-semibold')}>{day}</span>
       {isTrip && (
-        <div className="flex gap-0.5 mt-1">
+        <div className="hidden sm:flex gap-0.5 mt-1">
           {Array.from({ length: Math.min(activities.length, 4) }).map((_, i) => (
             <div
               key={i}

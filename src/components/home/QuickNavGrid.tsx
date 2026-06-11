@@ -54,12 +54,12 @@ const cards = [
 
 export function QuickNavGrid() {
   return (
-    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+    <div className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
       {cards.map(({ href, icon: Icon, title, description, color, glow }) => (
         <Link
           key={href}
           href={href}
-          className="group glass rounded-2xl p-5 flex flex-col gap-3 hover:scale-[1.02] transition-all duration-200"
+          className="group glass rounded-2xl p-4 sm:p-5 flex flex-col gap-2 sm:gap-3 hover:scale-[1.02] transition-all duration-200"
           style={{ border: '1px solid rgba(255,255,255,0.06)' }}
         >
           <div

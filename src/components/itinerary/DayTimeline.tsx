@@ -20,7 +20,7 @@ export function DayTimeline({ dayPlan, onAdd, onUpdate, onDelete }: DayTimelineP
   return (
     <div>
       {dayPlan.activities.length === 0 && (
-        <div className="flex flex-col items-center justify-center py-12 gap-3 text-center">
+        <div className="flex flex-col items-center justify-center py-10 sm:py-12 gap-3 text-center">
           <div className="w-12 h-12 rounded-2xl glass flex items-center justify-center text-2xl">
             📍
           </div>

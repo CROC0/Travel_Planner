@@ -59,7 +59,7 @@ export function ActivityItem({ activity, onEdit, onDelete }: ActivityItemProps) 
 
       {/* Card */}
       <div
-        className="flex-1 glass rounded-xl p-4 mb-3 transition-all duration-200"
+        className="flex-1 glass rounded-xl p-3 sm:p-4 mb-3 transition-all duration-200"
         style={{
           borderLeft: `2px solid ${color}`,
           boxShadow: hovering ? `0 0 20px ${color}15` : 'none',
@@ -90,7 +90,7 @@ export function ActivityItem({ activity, onEdit, onDelete }: ActivityItemProps) 
             </div>
           </div>
 
-          <div className={cn('flex items-center gap-1 transition-opacity', hovering ? 'opacity-100' : 'opacity-0')}>
+          <div className={cn('flex items-center gap-1 transition-opacity opacity-100 sm:opacity-0', hovering && 'sm:opacity-100')}>
             {activity.googleMapsUrl && (
               <a
                 href={activity.googleMapsUrl}

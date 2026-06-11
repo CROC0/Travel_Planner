@@ -47,8 +47,8 @@ export default function AttractionsPage() {
 
   return (
     <PageWrapper>
-      <div className="max-w-5xl mx-auto px-4 py-10">
-        <Link href="/explore" className="inline-flex items-center gap-1.5 text-[#8888aa] hover:text-[#00e5cc] text-sm transition-colors mb-6">
+      <div className="max-w-5xl mx-auto px-4 py-6 sm:py-10">
+        <Link href="/explore" className="inline-flex items-center gap-1.5 text-[#8888aa] hover:text-[#00e5cc] text-sm transition-colors mb-5 sm:mb-6">
           <ArrowLeft className="w-4 h-4" /> Back to Explore
         </Link>
         <SectionHeading

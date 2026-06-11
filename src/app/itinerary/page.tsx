@@ -11,7 +11,7 @@ export default function ItineraryPage() {
 
   return (
     <PageWrapper>
-      <div className="max-w-2xl mx-auto px-4 py-10">
+      <div className="max-w-2xl mx-auto px-4 py-6 sm:py-10">
         <SectionHeading
           title="Itinerary"
           subtitle="10 days in the Lion City"
