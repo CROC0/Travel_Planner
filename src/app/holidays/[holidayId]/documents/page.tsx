@@ -2,9 +2,11 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 import { Download, FileText, FileImage, File, Trash2, Upload, FolderOpen } from 'lucide-react';
 import { PageWrapper } from '@/components/layout/PageWrapper';
 import { SectionHeading } from '@/components/shared/SectionHeading';
+import { ConfirmDialog } from '@/components/shared/ConfirmDialog';
 import { useHoliday, useIsOwner } from '@/context/HolidayContext';
 import type { HolidayDocument } from '@/types';
 
@@ -41,6 +43,7 @@ export default function DocumentsPage() {
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState('');
   const [dragOver, setDragOver] = useState(false);
+  const [pendingDelete, setPendingDelete] = useState<HolidayDocument | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -71,9 +74,18 @@ export default function DocumentsPage() {
   }, [holiday.id]);
 
   async function deleteDoc(id: string) {
-    const res = await fetch(`/api/holidays/${holiday.id}/documents/${id}`, { method: 'DELETE' });
-    const data = await res.json();
-    if (res.ok && Array.isArray(data)) setDocs(data);
+    try {
+      const res = await fetch(`/api/holidays/${holiday.id}/documents/${id}`, { method: 'DELETE' });
+      const data = await res.json();
+      if (res.ok && Array.isArray(data)) {
+        setDocs(data);
+        toast.success('Document deleted');
+      } else {
+        toast.error('Failed to delete document');
+      }
+    } catch {
+      toast.error('Failed to delete document');
+    }
   }
 
   function onFileChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -91,6 +103,16 @@ export default function DocumentsPage() {
 
   return (
     <PageWrapper>
+      <ConfirmDialog
+        open={pendingDelete !== null}
+        onOpenChange={(open) => { if (!open) setPendingDelete(null); }}
+        title="Delete document?"
+        description={pendingDelete ? `"${pendingDelete.name}" will be permanently deleted. This can't be undone.` : ''}
+        confirmLabel="Delete"
+        cancelLabel="Keep"
+        destructive
+        onConfirm={() => { if (pendingDelete) deleteDoc(pendingDelete.id); setPendingDelete(null); }}
+      />
       <div className="max-w-3xl mx-auto px-4 py-5 sm:py-8">
         <div className="mb-6 sm:mb-8">
           <SectionHeading title="Documents" subtitle={`Files attached to ${holiday.name}`} accent="teal" symbol="◈" />
@@ -176,7 +198,7 @@ export default function DocumentsPage() {
                       <Download className="w-4 h-4" />
                     </a>
                     <button
-                      onClick={() => deleteDoc(doc.id)}
+                      onClick={() => setPendingDelete(doc)}
                       className="p-2 rounded-lg text-[#8888aa] hover:text-red-400 transition-colors"
                       title="Delete"
                     >

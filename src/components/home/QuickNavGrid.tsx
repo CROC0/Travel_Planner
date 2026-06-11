@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { Map, Calendar, Compass, Utensils, Info, Star, ClipboardList, FolderOpen } from 'lucide-react';
 
-export function QuickNavGrid({ holidayId, destination }: { holidayId: string; destination: string }) {
+export function QuickNavGrid({ holidayId, destination, isOwner = true }: { holidayId: string; destination: string; isOwner?: boolean }) {
   const isSingapore = destination.toLowerCase() === 'singapore';
   const base = `/holidays/${holidayId}`;
 
@@ -14,8 +14,10 @@ export function QuickNavGrid({ holidayId, destination }: { holidayId: string; de
     ] : []),
     { href: `${base}/explore`, icon: Compass, title: 'Explore', description: 'Discover more', color: '#3b82f6', glow: '0 0 30px #3b82f633' },
     { href: `${base}/explore/practical`, icon: Info, title: 'Practical', description: 'Tips & transport', color: '#10b981', glow: '0 0 30px #10b98133' },
-    { href: `${base}/prep`, icon: ClipboardList, title: 'Prep', description: 'Trip to-do list', color: '#ffd700', glow: '0 0 30px #ffd70033' },
-    { href: `${base}/documents`, icon: FolderOpen, title: 'Documents', description: 'Files & attachments', color: '#00e5cc', glow: '0 0 30px #00e5cc33' },
+    ...(isOwner ? [
+      { href: `${base}/prep`, icon: ClipboardList, title: 'Prep', description: 'Trip to-do list', color: '#ffd700', glow: '0 0 30px #ffd70033' },
+      { href: `${base}/documents`, icon: FolderOpen, title: 'Documents', description: 'Files & attachments', color: '#00e5cc', glow: '0 0 30px #00e5cc33' },
+    ] : []),
   ];
 
   return (

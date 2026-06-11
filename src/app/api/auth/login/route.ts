@@ -2,10 +2,7 @@ import { SignJWT } from 'jose';
 import { NextRequest, NextResponse } from 'next/server';
 import { COOKIE_NAME, AUTH_COOKIE_MAX_AGE } from '@/lib/constants';
 import { getUserByEmail, verifyPassword } from '@/lib/users';
-
-function getSecret(): Uint8Array {
-  return new TextEncoder().encode(process.env.SITE_PASSWORD ?? '');
-}
+import { getSecret } from '@/lib/jwt';
 
 export async function POST(req: NextRequest) {
   try {

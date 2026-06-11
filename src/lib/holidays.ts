@@ -1,11 +1,6 @@
-import { Redis } from '@upstash/redis';
 import { nanoid } from 'nanoid';
 import type { Holiday } from '@/types';
-
-const redis = new Redis({
-  url: process.env.UPSTASH_REDIS_REST_URL!,
-  token: process.env.UPSTASH_REDIS_REST_TOKEN!,
-});
+import { redis } from '@/lib/kv';
 
 export async function createHoliday(userId: string, data: Omit<Holiday, 'id' | 'userId' | 'createdAt'>): Promise<Holiday> {
   const id = nanoid();

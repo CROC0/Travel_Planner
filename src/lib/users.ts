@@ -1,12 +1,7 @@
-import { Redis } from '@upstash/redis';
 import bcrypt from 'bcryptjs';
 import { nanoid } from 'nanoid';
 import type { User } from '@/types';
-
-const redis = new Redis({
-  url: process.env.UPSTASH_REDIS_REST_URL!,
-  token: process.env.UPSTASH_REDIS_REST_TOKEN!,
-});
+import { redis } from '@/lib/kv';
 
 export async function createUser(email: string, name: string, password: string): Promise<Omit<User, 'passwordHash'>> {
   const id = nanoid();

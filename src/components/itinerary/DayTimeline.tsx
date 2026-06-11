@@ -8,14 +8,15 @@ import { AddActivityModal } from './AddActivityModal';
 
 interface DayTimelineProps {
   dayPlan: DayPlan;
-  onAdd: (form: AddActivityFormValues) => void;
-  onUpdate: (id: string, form: Partial<AddActivityFormValues>) => void;
-  onDelete: (id: string) => void;
+  onAdd?: (form: AddActivityFormValues) => void;
+  onUpdate?: (id: string, form: Partial<AddActivityFormValues>) => void;
+  onDelete?: (id: string) => void;
 }
 
 export function DayTimeline({ dayPlan, onAdd, onUpdate, onDelete }: DayTimelineProps) {
   const [addOpen, setAddOpen] = useState(false);
   const [editTarget, setEditTarget] = useState<Activity | null>(null);
+  const canEdit = !!onAdd;
 
   return (
     <div>
@@ -25,12 +26,14 @@ export function DayTimeline({ dayPlan, onAdd, onUpdate, onDelete }: DayTimelineP
             📍
           </div>
           <p className="text-[#8888aa] text-sm">No activities yet</p>
-          <button
-            onClick={() => setAddOpen(true)}
-            className="text-[#00e5cc] text-sm hover:underline"
-          >
-            Add your first activity
-          </button>
+          {canEdit && (
+            <button
+              onClick={() => setAddOpen(true)}
+              className="text-[#00e5cc] text-sm hover:underline"
+            >
+              Add your first activity
+            </button>
+          )}
         </div>
       )}
 
@@ -39,13 +42,13 @@ export function DayTimeline({ dayPlan, onAdd, onUpdate, onDelete }: DayTimelineP
           <ActivityItem
             key={activity.id}
             activity={activity}
-            onEdit={setEditTarget}
+            onEdit={canEdit ? setEditTarget : undefined}
             onDelete={onDelete}
           />
         ))}
       </div>
 
-      {dayPlan.activities.length > 0 && (
+      {canEdit && dayPlan.activities.length > 0 && (
         <button
           onClick={() => setAddOpen(true)}
           className="mt-2 flex items-center gap-2 text-sm text-[#8888aa] hover:text-[#00e5cc] transition-colors group"
@@ -57,25 +60,26 @@ export function DayTimeline({ dayPlan, onAdd, onUpdate, onDelete }: DayTimelineP
         </button>
       )}
 
-      <AddActivityModal
-        open={addOpen}
-        onClose={() => setAddOpen(false)}
-        onSave={onAdd}
-        day={dayPlan.day}
-        mode="add"
-      />
-
-      <AddActivityModal
-        key={editTarget?.id ?? 'edit'}
-        open={!!editTarget}
-        onClose={() => setEditTarget(null)}
-        onSave={(form) => {
-          if (editTarget) onUpdate(editTarget.id, form);
-        }}
-        day={dayPlan.day}
-        initial={editTarget ?? undefined}
-        mode="edit"
-      />
+      {canEdit && (
+        <>
+          <AddActivityModal
+            open={addOpen}
+            onClose={() => setAddOpen(false)}
+            onSave={onAdd!}
+            day={dayPlan.day}
+            mode="add"
+          />
+          <AddActivityModal
+            key={editTarget?.id ?? 'edit'}
+            open={!!editTarget}
+            onClose={() => setEditTarget(null)}
+            onSave={(form) => { if (editTarget) onUpdate?.(editTarget.id, form); }}
+            day={dayPlan.day}
+            initial={editTarget ?? undefined}
+            mode="edit"
+          />
+        </>
+      )}
     </div>
   );
 }

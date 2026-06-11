@@ -139,6 +139,7 @@ export interface Holiday {
   endDate: string;   // ISO "2026-10-04"
   coverEmoji?: string;
   crew?: CrewMember[];
+  isPublic?: boolean; // owner opted in to a read-only public share link
   createdAt: number;
 }
 

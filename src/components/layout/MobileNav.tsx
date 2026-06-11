@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Home, Map, Calendar, Compass, ClipboardList, FolderOpen } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useActiveHoliday } from '@/context/ActiveHolidayContext';
 
 function getHolidayId(pathname: string): string | null {
   const m = pathname.match(/^\/holidays\/([^/]+)/);
@@ -13,6 +14,8 @@ function getHolidayId(pathname: string): string | null {
 export function MobileNav() {
   const pathname = usePathname();
   const holidayId = getHolidayId(pathname);
+  const { active } = useActiveHoliday();
+  const isOwner = active?.isOwner ?? false;
 
   if (!holidayId) return null;
 
@@ -21,8 +24,10 @@ export function MobileNav() {
     { href: `/holidays/${holidayId}/itinerary`, label: 'Itinerary', icon: Map },
     { href: `/holidays/${holidayId}/calendar`, label: 'Calendar', icon: Calendar },
     { href: `/holidays/${holidayId}/explore`, label: 'Explore', icon: Compass },
-    { href: `/holidays/${holidayId}/prep`, label: 'Prep', icon: ClipboardList },
-    { href: `/holidays/${holidayId}/documents`, label: 'Docs', icon: FolderOpen },
+    ...(isOwner ? [
+      { href: `/holidays/${holidayId}/prep`, label: 'Prep', icon: ClipboardList },
+      { href: `/holidays/${holidayId}/documents`, label: 'Docs', icon: FolderOpen },
+    ] : []),
   ];
 
   return (

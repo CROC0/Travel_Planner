@@ -4,10 +4,7 @@ import { COOKIE_NAME, AUTH_COOKIE_MAX_AGE } from '@/lib/constants';
 import { getUserByEmail, createUser } from '@/lib/users';
 import { createHoliday } from '@/lib/holidays';
 import { redis } from '@/lib/kv';
-
-function getSecret(): Uint8Array {
-  return new TextEncoder().encode(process.env.SITE_PASSWORD ?? '');
-}
+import { getSecret } from '@/lib/jwt';
 
 async function migrateLegacyData(userId: string) {
   const [legacyItinerary, legacyTodos] = await Promise.all([

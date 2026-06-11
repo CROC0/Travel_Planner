@@ -59,23 +59,31 @@ export function LoginForm() {
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Email address"
-              required
-              autoFocus
-              className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-[#8888aa] focus:outline-none focus:border-[#00e5cc] focus:ring-1 focus:ring-[#00e5cc] transition-colors"
-            />
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Password"
-              required
-              className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-[#8888aa] focus:outline-none focus:border-[#00e5cc] focus:ring-1 focus:ring-[#00e5cc] transition-colors"
-            />
+            <div>
+              <label htmlFor="login-email" className="sr-only">Email address</label>
+              <input
+                id="login-email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Email address"
+                required
+                autoFocus
+                className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-[#8888aa] focus:outline-none focus:border-[#00e5cc] focus:ring-1 focus:ring-[#00e5cc] transition-colors"
+              />
+            </div>
+            <div>
+              <label htmlFor="login-password" className="sr-only">Password</label>
+              <input
+                id="login-password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Password"
+                required
+                className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-[#8888aa] focus:outline-none focus:border-[#00e5cc] focus:ring-1 focus:ring-[#00e5cc] transition-colors"
+              />
+            </div>
 
             {error && <p className="text-red-400 text-sm flex items-center gap-2"><span>⚠</span> {error}</p>}
 

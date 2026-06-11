@@ -1,19 +1,22 @@
 'use client';
 
-import { use } from 'react';
+import { use, useState } from 'react';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft, RotateCcw } from 'lucide-react';
 import { PageWrapper } from '@/components/layout/PageWrapper';
 import { DayTimeline } from '@/components/itinerary/DayTimeline';
+import { ConfirmDialog } from '@/components/shared/ConfirmDialog';
 import { useItinerary } from '@/hooks/useItinerary';
-import { useHoliday } from '@/context/HolidayContext';
+import { useHoliday, useIsOwner } from '@/context/HolidayContext';
 
 export default function DayPage({ params }: { params: Promise<{ holidayId: string; day: string }> }) {
   const { day: dayStr } = use(params);
   const day = parseInt(dayStr, 10);
   const holiday = useHoliday();
+  const isOwner = useIsOwner();
   const { itinerary, loading, addActivity, updateActivity, removeActivity, resetDay } = useItinerary(holiday.id, holiday);
+  const [confirmReset, setConfirmReset] = useState(false);
 
   if (isNaN(day) || day < 1 || day > itinerary.length) notFound();
 
@@ -26,6 +29,16 @@ export default function DayPage({ params }: { params: Promise<{ holidayId: strin
 
   return (
     <PageWrapper>
+      <ConfirmDialog
+        open={confirmReset}
+        onOpenChange={setConfirmReset}
+        title={`Reset Day ${day}?`}
+        description="This permanently clears all activities for this day. This can't be undone."
+        confirmLabel="Reset day"
+        cancelLabel="Keep"
+        destructive
+        onConfirm={() => resetDay(day)}
+      />
       <div className="max-w-2xl mx-auto px-4 py-6 sm:py-10">
         <div className="mb-6 sm:mb-8">
           <Link
@@ -46,14 +59,16 @@ export default function DayPage({ params }: { params: Promise<{ holidayId: strin
               </div>
               <p className="text-[#8888aa] text-xs sm:text-sm">{formattedDate}</p>
             </div>
-            <button
-              onClick={() => resetDay(day)}
-              className="flex-shrink-0 flex items-center gap-1.5 text-xs text-[#8888aa] hover:text-red-400 transition-colors glass rounded-lg px-2.5 py-2 sm:px-3"
-              title="Reset day"
-            >
-              <RotateCcw className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">Reset</span>
-            </button>
+            {isOwner && (
+              <button
+                onClick={() => setConfirmReset(true)}
+                className="flex-shrink-0 flex items-center gap-1.5 text-xs text-[#8888aa] hover:text-red-400 transition-colors glass rounded-lg px-2.5 py-2 sm:px-3"
+                title="Reset day"
+              >
+                <RotateCcw className="w-3.5 h-3.5" />
+                <span>Reset</span>
+              </button>
+            )}
           </div>
         </div>
 
@@ -64,9 +79,9 @@ export default function DayPage({ params }: { params: Promise<{ holidayId: strin
         ) : dayPlan ? (
           <DayTimeline
             dayPlan={dayPlan}
-            onAdd={(form) => addActivity(day, form)}
-            onUpdate={(id, form) => updateActivity(day, id, form)}
-            onDelete={(id) => removeActivity(day, id)}
+            onAdd={isOwner ? (form) => addActivity(day, form) : undefined}
+            onUpdate={isOwner ? (id, form) => updateActivity(day, id, form) : undefined}
+            onDelete={isOwner ? (id) => removeActivity(day, id) : undefined}
           />
         ) : null}
       </div>

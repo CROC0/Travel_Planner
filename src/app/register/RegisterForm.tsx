@@ -2,12 +2,14 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import { Plane, UserPlus } from 'lucide-react';
 
 export function RegisterForm() {
   const [form, setForm] = useState({ name: '', email: '', password: '' });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const params = useSearchParams();
 
   function set(key: string, value: string) {
     setForm((prev) => ({ ...prev, [key]: value }));
@@ -24,7 +26,7 @@ export function RegisterForm() {
         body: JSON.stringify(form),
       });
       if (res.ok) {
-        window.location.href = '/';
+        window.location.href = params.get('from') ?? '/';
       } else {
         const data = await res.json();
         setError(data.message ?? 'Registration failed');
@@ -60,32 +62,44 @@ export function RegisterForm() {
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
-            <input
-              type="text"
-              value={form.name}
-              onChange={(e) => set('name', e.target.value)}
-              placeholder="Your name"
-              required
-              autoFocus
-              className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-[#8888aa] focus:outline-none focus:border-[#00e5cc] focus:ring-1 focus:ring-[#00e5cc] transition-colors"
-            />
-            <input
-              type="email"
-              value={form.email}
-              onChange={(e) => set('email', e.target.value)}
-              placeholder="Email address"
-              required
-              className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-[#8888aa] focus:outline-none focus:border-[#00e5cc] focus:ring-1 focus:ring-[#00e5cc] transition-colors"
-            />
-            <input
-              type="password"
-              value={form.password}
-              onChange={(e) => set('password', e.target.value)}
-              placeholder="Password (min 6 characters)"
-              required
-              minLength={6}
-              className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-[#8888aa] focus:outline-none focus:border-[#00e5cc] focus:ring-1 focus:ring-[#00e5cc] transition-colors"
-            />
+            <div>
+              <label htmlFor="register-name" className="sr-only">Your name</label>
+              <input
+                id="register-name"
+                type="text"
+                value={form.name}
+                onChange={(e) => set('name', e.target.value)}
+                placeholder="Your name"
+                required
+                autoFocus
+                className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-[#8888aa] focus:outline-none focus:border-[#00e5cc] focus:ring-1 focus:ring-[#00e5cc] transition-colors"
+              />
+            </div>
+            <div>
+              <label htmlFor="register-email" className="sr-only">Email address</label>
+              <input
+                id="register-email"
+                type="email"
+                value={form.email}
+                onChange={(e) => set('email', e.target.value)}
+                placeholder="Email address"
+                required
+                className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-[#8888aa] focus:outline-none focus:border-[#00e5cc] focus:ring-1 focus:ring-[#00e5cc] transition-colors"
+              />
+            </div>
+            <div>
+              <label htmlFor="register-password" className="sr-only">Password</label>
+              <input
+                id="register-password"
+                type="password"
+                value={form.password}
+                onChange={(e) => set('password', e.target.value)}
+                placeholder="Password (min 6 characters)"
+                required
+                minLength={6}
+                className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-[#8888aa] focus:outline-none focus:border-[#00e5cc] focus:ring-1 focus:ring-[#00e5cc] transition-colors"
+              />
+            </div>
 
             {error && <p className="text-red-400 text-sm flex items-center gap-2"><span>⚠</span> {error}</p>}
 

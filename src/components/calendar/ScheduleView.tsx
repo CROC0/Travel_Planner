@@ -65,7 +65,7 @@ const DAY_NAMES  = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 const MON_NAMES  = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
 // ─── Activity detail modal ─────────────────────────────────────────────────────
-function ActivityModal({ selected, onClose }: { selected: Selected; onClose: () => void }) {
+function ActivityModal({ selected, onClose, holidayId }: { selected: Selected; onClose: () => void; holidayId: string }) {
   if (!selected) return null;
   const { activity: a, dayNum } = selected;
   const color = CAT_COLOR[a.category];
@@ -126,7 +126,7 @@ function ActivityModal({ selected, onClose }: { selected: Selected; onClose: () 
         {/* Actions */}
         <div className="flex items-center gap-2">
           <Link
-            href={`/itinerary/${dayNum}`}
+            href={`/holidays/${holidayId}/itinerary/${dayNum}`}
             className="flex-1 py-2 rounded-xl text-center text-sm font-semibold transition-all"
             style={{ background: `${color}20`, color, border: `1px solid ${color}33` }}
             onClick={onClose}
@@ -235,7 +235,7 @@ function buildDays(itinerary: Itinerary) {
 }
 
 // ─── Mobile: single-day timeline with prev/next nav ───────────────────────────
-function MobileScheduleView({ itinerary, onAdd }: { itinerary: Itinerary; onAdd: (day: number, form: AddActivityFormValues) => void }) {
+function MobileScheduleView({ itinerary, onAdd, holidayId }: { itinerary: Itinerary; onAdd?: (day: number, form: AddActivityFormValues) => void; holidayId: string }) {
   const days = buildDays(itinerary);
   const [idx, setIdx] = useState(0);
   const [selected, setSelected] = useState<Selected>(null);
@@ -245,15 +245,17 @@ function MobileScheduleView({ itinerary, onAdd }: { itinerary: Itinerary; onAdd:
 
   return (
     <>
-    <ActivityModal selected={selected} onClose={() => setSelected(null)} />
-    <AddActivityModal
-      key={addTarget ?? 'mobile-add'}
-      open={addTarget !== null}
-      onClose={() => setAddTarget(null)}
-      onSave={(form) => { if (addTarget !== null) onAdd(addTarget, form); }}
-      day={addTarget ?? dayNum}
-      mode="add"
-    />
+    <ActivityModal selected={selected} onClose={() => setSelected(null)} holidayId={holidayId} />
+    {onAdd && (
+      <AddActivityModal
+        key={addTarget ?? 'mobile-add'}
+        open={addTarget !== null}
+        onClose={() => setAddTarget(null)}
+        onSave={(form) => { if (addTarget !== null) onAdd(addTarget, form); }}
+        day={addTarget ?? dayNum}
+        mode="add"
+      />
+    )}
     <div className="rounded-2xl overflow-hidden" style={{ border: '1px solid rgba(255,255,255,0.07)' }}>
 
       {/* Day navigation */}
@@ -269,7 +271,7 @@ function MobileScheduleView({ itinerary, onAdd }: { itinerary: Itinerary; onAdd:
         </button>
 
         <div className="flex items-center gap-2">
-        <Link href={`/itinerary/${dayNum}`} className="text-center group">
+        <Link href={`/holidays/${holidayId}/itinerary/${dayNum}`} className="text-center group">
           <p style={{ fontSize: 9, letterSpacing: '0.12em' }} className="text-[#555577] uppercase font-medium">{name}</p>
           <p className="text-white font-bold group-hover:text-[#00e5cc] transition-colors" style={{ fontSize: 22, lineHeight: 1 }}>{num}</p>
           <p style={{ fontSize: 9 }} className="text-[#555577]">{mon}</p>
@@ -286,14 +288,16 @@ function MobileScheduleView({ itinerary, onAdd }: { itinerary: Itinerary; onAdd:
             )}
           </div>
         </Link>
-        <button
-          onClick={() => setAddTarget(dayNum)}
-          className="p-1.5 rounded-lg transition-colors"
-          style={{ color: '#00e5cc', background: '#00e5cc18', border: '1px solid #00e5cc33' }}
-          title="Add activity"
-        >
-          <Plus className="w-4 h-4" />
-        </button>
+        {onAdd && (
+          <button
+            onClick={() => setAddTarget(dayNum)}
+            className="p-1.5 rounded-lg transition-colors"
+            style={{ color: '#00e5cc', background: '#00e5cc18', border: '1px solid #00e5cc33' }}
+            title="Add activity"
+          >
+            <Plus className="w-4 h-4" />
+          </button>
+        )}
         </div>
 
         <button
@@ -388,7 +392,7 @@ function MobileScheduleView({ itinerary, onAdd }: { itinerary: Itinerary; onAdd:
 }
 
 // ─── Desktop: full 10-column timeline ─────────────────────────────────────────
-function DesktopScheduleView({ itinerary, onAdd }: { itinerary: Itinerary; onAdd: (day: number, form: AddActivityFormValues) => void }) {
+function DesktopScheduleView({ itinerary, onAdd, holidayId }: { itinerary: Itinerary; onAdd?: (day: number, form: AddActivityFormValues) => void; holidayId: string }) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [selected, setSelected] = useState<Selected>(null);
   const [addTarget, setAddTarget] = useState<number | null>(null);
@@ -397,15 +401,17 @@ function DesktopScheduleView({ itinerary, onAdd }: { itinerary: Itinerary; onAdd
 
   return (
     <>
-    <ActivityModal selected={selected} onClose={() => setSelected(null)} />
-    <AddActivityModal
-      key={addTarget ?? 'desktop-add'}
-      open={addTarget !== null}
-      onClose={() => setAddTarget(null)}
-      onSave={(form) => { if (addTarget !== null) onAdd(addTarget, form); }}
-      day={addTarget ?? 1}
-      mode="add"
-    />
+    <ActivityModal selected={selected} onClose={() => setSelected(null)} holidayId={holidayId} />
+    {onAdd && (
+      <AddActivityModal
+        key={addTarget ?? 'desktop-add'}
+        open={addTarget !== null}
+        onClose={() => setAddTarget(null)}
+        onSave={(form) => { if (addTarget !== null) onAdd(addTarget, form); }}
+        day={addTarget ?? 1}
+        mode="add"
+      />
+    )}
     <div className="rounded-2xl overflow-hidden" style={{ border: '1px solid rgba(255,255,255,0.07)' }}>
       <div ref={scrollRef} style={{ overflowX: 'auto', overflowY: 'auto', maxHeight: '76vh' }}>
         <div style={{ minWidth: minW }}>
@@ -419,7 +425,7 @@ function DesktopScheduleView({ itinerary, onAdd }: { itinerary: Itinerary; onAdd
             {days.map(({ date, dayNum, name, num, mon, plan }) => {
               const count = plan?.activities.length ?? 0;
               return (
-                <Link key={date} href={`/itinerary/${dayNum}`}
+                <Link key={date} href={`/holidays/${holidayId}/itinerary/${dayNum}`}
                   className="flex-shrink-0 group/hdr"
                   style={{ width: DAY_W, borderRight: '1px solid rgba(255,255,255,0.05)' }}>
                   <div className="px-3 py-3 text-center">
@@ -440,14 +446,16 @@ function DesktopScheduleView({ itinerary, onAdd }: { itinerary: Itinerary; onAdd
                         </span>
                       )}
                     </div>
-                    <button
-                      onClick={(e) => { e.preventDefault(); setAddTarget(dayNum); }}
-                      className="mt-1.5 opacity-0 group-hover/hdr:opacity-100 transition-opacity flex items-center justify-center gap-1 mx-auto px-2 py-0.5 rounded-md"
-                      style={{ fontSize: 9, background: '#00e5cc18', color: '#00e5cc', border: '1px solid #00e5cc33' }}
-                      title={`Add to Day ${dayNum}`}
-                    >
-                      <Plus className="w-2.5 h-2.5" /> Add
-                    </button>
+                    {onAdd && (
+                      <button
+                        onClick={(e) => { e.preventDefault(); setAddTarget(dayNum); }}
+                        className="mt-1.5 opacity-0 group-hover/hdr:opacity-100 transition-opacity flex items-center justify-center gap-1 mx-auto px-2 py-0.5 rounded-md"
+                        style={{ fontSize: 9, background: '#00e5cc18', color: '#00e5cc', border: '1px solid #00e5cc33' }}
+                        title={`Add to Day ${dayNum}`}
+                      >
+                        <Plus className="w-2.5 h-2.5" /> Add
+                      </button>
+                    )}
                   </div>
                 </Link>
               );
@@ -526,9 +534,9 @@ function DesktopScheduleView({ itinerary, onAdd }: { itinerary: Itinerary; onAdd
 }
 
 // ─── Main export ───────────────────────────────────────────────────────────────
-export function ScheduleView({ itinerary, onAdd }: { itinerary: Itinerary; onAdd: (day: number, form: AddActivityFormValues) => void }) {
+export function ScheduleView({ itinerary, onAdd, holidayId }: { itinerary: Itinerary; onAdd?: (day: number, form: AddActivityFormValues) => void; holidayId: string }) {
   const isMobile = useMediaQuery('(max-width: 767px)');
   return isMobile
-    ? <MobileScheduleView itinerary={itinerary} onAdd={onAdd} />
-    : <DesktopScheduleView itinerary={itinerary} onAdd={onAdd} />;
+    ? <MobileScheduleView itinerary={itinerary} onAdd={onAdd} holidayId={holidayId} />
+    : <DesktopScheduleView itinerary={itinerary} onAdd={onAdd} holidayId={holidayId} />;
 }

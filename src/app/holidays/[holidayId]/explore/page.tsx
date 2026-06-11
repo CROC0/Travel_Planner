@@ -9,9 +9,10 @@ import { notFound } from 'next/navigation';
 export default async function ExplorePage({ params }: { params: Promise<{ holidayId: string }> }) {
   const { holidayId } = await params;
   const user = await getUserFromRequest();
-  if (!user) notFound();
   const holiday = await getHoliday(holidayId);
-  if (!holiday || holiday.userId !== user.userId) notFound();
+  if (!holiday) notFound();
+  const isOwner = !!user && holiday.userId === user.userId;
+  if (!isOwner && !holiday.isPublic) notFound();
 
   const isSingapore = holiday.destination.toLowerCase() === 'singapore';
   const base = `/holidays/${holidayId}/explore`;

@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 import { ArrowLeft, Plus, Settings, Trash2 } from 'lucide-react';
 import { nanoid } from 'nanoid';
 import { useHoliday, useIsOwner } from '@/context/HolidayContext';
@@ -29,8 +30,19 @@ export default function EditHolidayPage() {
   const [crew, setCrew] = useState<CrewMember[]>(holiday.crew ?? []);
   const [newMember, setNewMember] = useState(BLANK_MEMBER);
   const [addingMember, setAddingMember] = useState(false);
+  const [isPublic, setIsPublic] = useState<boolean>(holiday.isPublic ?? false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  const shareUrl = typeof window !== 'undefined'
+    ? `${window.location.origin}/holidays/${holiday.id}`
+    : `/holidays/${holiday.id}`;
+  function copyShareLink() {
+    navigator.clipboard?.writeText(shareUrl).then(
+      () => toast.success('Link copied'),
+      () => toast.error('Could not copy link'),
+    );
+  }
 
   useEffect(() => {
     if (!isOwner) router.replace(`/login?from=/holidays/${holiday.id}/edit`);
@@ -71,7 +83,7 @@ export default function EditHolidayPage() {
       const res = await fetch(`/api/holidays/${holiday.id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...form, crew }),
+        body: JSON.stringify({ ...form, crew, isPublic }),
       });
       if (!res.ok) {
         const data = await res.json();
@@ -310,6 +322,46 @@ export default function EditHolidayPage() {
                     Cancel
                   </button>
                 </div>
+              </div>
+            )}
+          </div>
+
+          {/* Sharing */}
+          <div className="glass rounded-2xl p-6 sm:p-8 space-y-3" style={{ border: '1px solid rgba(0,229,204,0.15)' }}>
+            <button
+              type="button"
+              onClick={() => setIsPublic((v) => !v)}
+              className="w-full flex items-center justify-between gap-3 text-left"
+            >
+              <div>
+                <p className="text-white font-semibold text-sm">Public share link</p>
+                <p className="text-[#8888aa] text-xs mt-0.5">Anyone with the link can view this trip (read-only). Prep &amp; documents stay private.</p>
+              </div>
+              <span
+                className="relative inline-flex h-6 w-11 flex-shrink-0 rounded-full transition-colors"
+                style={{ background: isPublic ? '#00e5cc' : 'rgba(255,255,255,0.15)' }}
+              >
+                <span
+                  className="absolute top-0.5 h-5 w-5 rounded-full bg-white transition-transform"
+                  style={{ transform: isPublic ? 'translateX(22px)' : 'translateX(2px)' }}
+                />
+              </span>
+            </button>
+            {isPublic && (
+              <div className="flex items-center gap-2 rounded-lg px-3 py-2" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}>
+                <input
+                  readOnly
+                  aria-label="Public share link"
+                  value={shareUrl}
+                  className="flex-1 bg-transparent text-[#8888aa] text-xs outline-none truncate"
+                />
+                <button
+                  type="button"
+                  onClick={copyShareLink}
+                  className="text-xs font-semibold text-[#00e5cc] hover:text-white transition-colors flex-shrink-0"
+                >
+                  Copy
+                </button>
               </div>
             )}
           </div>

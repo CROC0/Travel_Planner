@@ -8,12 +8,13 @@ import { CalendarLegend } from './CalendarLegend';
 const DAYS_OF_WEEK_SHORT = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 const DAYS_OF_WEEK = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
-function MonthGrid({ year, month, monthName, itinerary, today }: {
+function MonthGrid({ year, month, monthName, itinerary, today, holidayId }: {
   year: number;
   month: number;
   monthName: string;
   itinerary: Itinerary;
   today: string;
+  holidayId: string;
 }) {
   const daysInMonth = getDaysInMonth(year, month);
   const firstDay = getFirstDayOfMonth(year, month);
@@ -47,6 +48,7 @@ function MonthGrid({ year, month, monthName, itinerary, today }: {
             day={day}
             itinerary={itinerary}
             today={today}
+            holidayId={holidayId}
           />
         ))}
       </div>
@@ -60,9 +62,10 @@ interface TripCalendarProps {
   itinerary: Itinerary;
   startDate: string;
   endDate: string;
+  holidayId: string;
 }
 
-export function TripCalendar({ itinerary, startDate, endDate }: TripCalendarProps) {
+export function TripCalendar({ itinerary, startDate, endDate, holidayId }: TripCalendarProps) {
   const today = toDateStr(
     new Date().getFullYear(),
     new Date().getMonth() + 1,
@@ -92,6 +95,7 @@ export function TripCalendar({ itinerary, startDate, endDate }: TripCalendarProp
             monthName={MONTH_NAMES[month - 1]}
             itinerary={itinerary}
             today={today}
+            holidayId={holidayId}
           />
         ))}
       </div>

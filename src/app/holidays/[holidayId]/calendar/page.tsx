@@ -6,7 +6,7 @@ import { PageWrapper } from '@/components/layout/PageWrapper';
 import { ScheduleView } from '@/components/calendar/ScheduleView';
 import { TripCalendar } from '@/components/calendar/TripCalendar';
 import { useItinerary } from '@/hooks/useItinerary';
-import { useHoliday } from '@/context/HolidayContext';
+import { useHoliday, useIsOwner } from '@/context/HolidayContext';
 
 type View = 'schedule' | 'month';
 
@@ -18,6 +18,7 @@ function formatDateRange(start: string, end: string): string {
 
 export default function CalendarPage() {
   const holiday = useHoliday();
+  const isOwner = useIsOwner();
   const { itinerary, loading, addActivity } = useItinerary(holiday.id, holiday);
   const [view, setView] = useState<View>('schedule');
   const dateRange = formatDateRange(holiday.startDate, holiday.endDate);
@@ -73,10 +74,10 @@ export default function CalendarPage() {
             <div className="w-8 h-8 rounded-full border-2 border-[#00e5cc] border-t-transparent animate-spin" />
           </div>
         ) : view === 'schedule' ? (
-          <ScheduleView itinerary={itinerary} onAdd={addActivity} />
+          <ScheduleView itinerary={itinerary} onAdd={isOwner ? addActivity : undefined} holidayId={holiday.id} />
         ) : (
           <div className="max-w-3xl mx-auto">
-            <TripCalendar itinerary={itinerary} startDate={holiday.startDate} endDate={holiday.endDate} />
+            <TripCalendar itinerary={itinerary} startDate={holiday.startDate} endDate={holiday.endDate} holidayId={holiday.id} />
           </div>
         )}
       </div>

@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useHoliday } from '@/context/HolidayContext';
+import { useHoliday, useIsOwner } from '@/context/HolidayContext';
 import { CountdownTimer } from '@/components/home/CountdownTimer';
 import { CrewSection } from '@/components/home/CrewSection';
 import { SectionHeading } from '@/components/shared/SectionHeading';
@@ -22,6 +22,7 @@ function tripDays(start: string, end: string): number {
 
 export default function HolidayHomePage() {
   const holiday = useHoliday();
+  const isOwner = useIsOwner();
   const departureDate = new Date(holiday.startDate + 'T00:00:00Z');
   const dateRange = formatDateRange(holiday.startDate, holiday.endDate);
   const days = tripDays(holiday.startDate, holiday.endDate);
@@ -83,12 +84,14 @@ export default function HolidayHomePage() {
         <section>
           <div className="flex items-end justify-between mb-0">
             <SectionHeading title="Trip at a glance" subtitle="Everything you need to know" accent="teal" symbol="◉" />
-            <Link
-              href={`/holidays/${holiday.id}/edit`}
-              className="inline-flex items-center gap-1.5 text-xs text-[#8888aa] hover:text-[#00e5cc] transition-colors pb-4"
-            >
-              <Pencil className="w-3.5 h-3.5" /> Edit holiday
-            </Link>
+            {isOwner && (
+              <Link
+                href={`/holidays/${holiday.id}/edit`}
+                className="inline-flex items-center gap-1.5 text-xs text-[#8888aa] hover:text-[#00e5cc] transition-colors pb-4"
+              >
+                <Pencil className="w-3.5 h-3.5" /> Edit holiday
+              </Link>
+            )}
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
             {summaryStats.map(({ icon: Icon, label, sub }) => (
@@ -105,7 +108,7 @@ export default function HolidayHomePage() {
 
         <section>
           <SectionHeading title="Quick navigation" subtitle="Jump to what you need" accent="gold" symbol="⊕" />
-          <QuickNavGrid holidayId={holiday.id} destination={holiday.destination} />
+          <QuickNavGrid holidayId={holiday.id} destination={holiday.destination} isOwner={isOwner} />
         </section>
       </div>
     </div>

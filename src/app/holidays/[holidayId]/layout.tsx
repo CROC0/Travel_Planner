@@ -11,11 +11,20 @@ export default async function HolidayLayout({
   params: Promise<{ holidayId: string }>;
 }) {
   const { holidayId } = await params;
-  const user = await getUserFromRequest();
-  if (!user) notFound();
+  const [user, holiday] = await Promise.all([
+    getUserFromRequest(),
+    getHoliday(holidayId),
+  ]);
 
-  const holiday = await getHoliday(holidayId);
-  if (!holiday || holiday.userId !== user.userId) notFound();
+  if (!holiday) notFound();
 
-  return <HolidayProvider holiday={holiday}>{children}</HolidayProvider>;
+  const isOwner = !!user && holiday.userId === user.userId;
+  // Private holidays are viewable only by their owner; public ones by anyone with the link.
+  if (!isOwner && !holiday.isPublic) notFound();
+
+  return (
+    <HolidayProvider holiday={holiday} isOwner={isOwner}>
+      {children}
+    </HolidayProvider>
+  );
 }

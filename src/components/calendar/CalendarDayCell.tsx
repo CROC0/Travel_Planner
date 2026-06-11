@@ -11,9 +11,10 @@ interface CalendarDayCellProps {
   day: number | null; // null = empty cell
   itinerary: Itinerary;
   today: string;
+  holidayId: string;
 }
 
-export function CalendarDayCell({ year, month, day, itinerary, today }: CalendarDayCellProps) {
+export function CalendarDayCell({ year, month, day, itinerary, today, holidayId }: CalendarDayCellProps) {
   if (!day) {
     return <div className="aspect-square" />;
   }
@@ -67,7 +68,7 @@ export function CalendarDayCell({ year, month, day, itinerary, today }: Calendar
   );
 
   if (isTrip && tripDay) {
-    return <Link href={`/itinerary/${tripDay}`}>{cell}</Link>;
+    return <Link href={`/holidays/${holidayId}/itinerary/${tripDay}`}>{cell}</Link>;
   }
   return cell;
 }
