@@ -16,6 +16,7 @@ export default function ItineraryPage() {
           title="Itinerary"
           subtitle="10 days in the Lion City"
           accent="teal"
+          symbol="≡"
         />
 
         {loading ? (

@@ -55,6 +55,7 @@ export default function AttractionsPage() {
           title="Attractions"
           subtitle={`${filtered.length} places to discover`}
           accent="pink"
+          symbol="★"
         />
         <CategoryFilter options={categories} active={active} onChange={setActive} />
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">

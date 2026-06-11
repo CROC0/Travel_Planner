@@ -41,6 +41,7 @@ export default function ExplorePage() {
           title="Explore Singapore"
           subtitle="Curated guides for your trip"
           accent="pink"
+          symbol="◆"
         />
 
         <div className="space-y-3 sm:space-y-4">

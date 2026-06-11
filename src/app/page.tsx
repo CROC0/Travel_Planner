@@ -14,7 +14,8 @@ export default function HomePage() {
           <SectionHeading
             title="The Crew"
             subtitle="Four Taylors. One city. Zero chill."
-            accent="teal"
+            accent="gold"
+            symbol="◈"
           />
           <FamilyCrew />
         </section>
@@ -24,6 +25,7 @@ export default function HomePage() {
             title="Trip at a glance"
             subtitle="Everything you need to know"
             accent="teal"
+            symbol="◉"
           />
           <TripSummaryCard />
         </section>
@@ -33,6 +35,7 @@ export default function HomePage() {
             title="Quick navigation"
             subtitle="Jump to what you need"
             accent="gold"
+            symbol="⊕"
           />
           <QuickNavGrid />
         </section>

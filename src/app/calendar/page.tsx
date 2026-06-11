@@ -21,7 +21,7 @@ export default function CalendarPage() {
         <div className="max-w-5xl mx-auto flex items-center justify-between mb-4 sm:mb-6 gap-3 flex-wrap">
           <div>
             <div className="flex items-center gap-3 mb-1">
-              <div className="h-0.5 w-8 rounded-full bg-[#ffd700]" />
+              <span className="text-lg leading-none select-none" style={{ color: '#ffd700', textShadow: '0 0 10px #ffd70099' }}>⊟</span>
               <h1 className="text-2xl md:text-3xl font-bold text-white">Calendar</h1>
             </div>
             <p className="text-[#8888aa] text-sm">25 Sep – 4 Oct 2026 · Singapore</p>

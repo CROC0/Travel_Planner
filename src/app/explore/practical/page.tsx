@@ -16,6 +16,7 @@ export default function PracticalPage() {
           title="Practical Info"
           subtitle="Everything you need for a smooth trip"
           accent="teal"
+          symbol="◎"
         />
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {practicalInfo.map((info) => (
